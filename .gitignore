@@ -1,0 +1,16 @@
+.gradle/5.2.1/gc.properties
+.gradle/5.2.1/executionHistory/executionHistory.bin
+.gradle/5.2.1/executionHistory/executionHistory.lock
+.gradle/5.2.1/fileChanges/last-build.bin
+.gradle/5.2.1/fileContent/fileContent.lock
+.gradle/5.2.1/fileHashes/fileHashes.bin
+.gradle/5.2.1/fileHashes/fileHashes.lock
+.gradle/5.2.1/javaCompile/javaCompile.lock
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
+.gradle/buildOutputCleanup/cache.properties
+.gradle/buildOutputCleanup/outputFiles.bin
+.gradle/vcs-1/gc.properties
+.idea/$PRODUCT_WORKSPACE_FILE$
+.idea/gradle.xml
+.idea/misc.xml
+.idea/workspace.xml
