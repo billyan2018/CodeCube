@@ -13,7 +13,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 class GitHubToken {
-    static final String TOKEN = "b90eb0740285f43c764843cdb9fa1f8e94a9b131";
+    static final String TOKEN = "YOUR TOKEN HERE";
 }
 ```
 - If you got compile error with Gradle, please enable "Annotation Processing"
