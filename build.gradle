@@ -11,9 +11,15 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+    // configuration that holds jars to include in the jar
+    extraLibs
+}
+
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.10'
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
+    extraLibs group: 'net.java.dev.jna', name: 'jna-platform', version: '4.2.2'
 
     compile "org.sonarsource.sonarqube:sonar-plugin-api:6.4"
     compile "org.codehaus.sonar:sonar-classloader:1.0"
@@ -36,4 +42,14 @@ dependencies {
     testCompile "junit:junit:4.12"
     testCompile "org.assertj:assertj-core:3.5.2"
     testCompile "org.mockito:mockito-core:2.8.9"
+}
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'codecube.PrAnalyzer'
+        )
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
 }

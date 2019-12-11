@@ -1,7 +1,6 @@
 package codecube;
 
-import static codecube.utils.GitHubRetriever.sendGetRequest;
-
+import codecube.utils.GitHubRetriever;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import codecube.core.AnalyzerResult;
 import codecube.domain.PullFile;
@@ -10,15 +9,21 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@RequiredArgsConstructor
 public class PrAnalyzer {
 
     private final ObjectMapper mapper = new ObjectMapper();
     private final JavaAnalyzer analyzer = new JavaAnalyzer();
 
-    List<PullFile> retrieveFiles(String prUrl) throws IOException {
+    private final String githubToken;
+    private final String prUrl;
+
+    List<PullFile> retrieveFiles() throws IOException {
         String host = prUrl.replace("https://github.com/", "https://api.github.com/repos/")
                 .replace("/pull/","/pulls/");
         if (!host.endsWith("/files")) {
@@ -30,7 +35,7 @@ public class PrAnalyzer {
         return Arrays.asList(array);
     }
 
-    static String preparePullRequestFile(PullFile file) throws IOException {
+    String preparePullRequestFile(PullFile file) throws IOException {
 
         String rawUrl = file.getRawUrl()
                 .replace("github.com", "raw.githubusercontent.com")
@@ -38,8 +43,8 @@ public class PrAnalyzer {
         return sendGetRequest(rawUrl);
     }
 
-    private void proceed(String prUrl) throws IOException {
-        List<PullFile> files = retrieveFiles(prUrl);
+    private void proceed() throws IOException {
+        List<PullFile> files = retrieveFiles();
         for (PullFile file : files) {
             System.out.println("======" + file.getFilename());
             if (!file.getFilename().endsWith(analyzer.fileExtension())) {
@@ -71,9 +76,15 @@ public class PrAnalyzer {
         return changedLines.stream().anyMatch(item -> item >= start && item <= end);
     }
 
-    public static void main(String[] args) throws IOException {
+    private String sendGetRequest(String url) throws IOException {
+        return new GitHubRetriever(githubToken, url).sendGetRequest();
+    }
 
-        PrAnalyzer prAnalyzer = new PrAnalyzer();
-        prAnalyzer.proceed("https://github.com/kingland-systems/mfps/pull/676/files");
+
+
+    public static void main(String[] args) throws IOException {
+        log.warn("PR:" + args[1]);
+        PrAnalyzer prAnalyzer = new PrAnalyzer(args[0], args[1]);
+        prAnalyzer.proceed();
     }
 }

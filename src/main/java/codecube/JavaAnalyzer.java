@@ -1,26 +1,18 @@
 package codecube;
 
-import codecube.core.AnalyzerResult;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.net.URISyntaxException;
+import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class JavaAnalyzer extends BaseAnalyzer {
+@Slf4j
+class JavaAnalyzer extends BaseAnalyzer {
 
-
-    public static void main(String[] args) {
-        final JavaAnalyzer javaAnalyzer = new JavaAnalyzer();
-        AnalyzerResult result =  javaAnalyzer.analyze(sampleCode());
-
-        result.issues().forEach(
-                item -> System.out.println(
-                        "" + item.getStartLine() + ":" + item.getRuleName()
-                )
-        );
-    }
-
+    private static final String  PLUG_IN_FILE= "sonar-java-plugin-4.9.0.9858.jar";
     @Override
     String language() {
         return "java";
@@ -28,11 +20,8 @@ public class JavaAnalyzer extends BaseAnalyzer {
 
     @Override
     Path findPluginFile() {
-        String filePath = JavaAnalyzer.class
-                .getClassLoader()
-                .getResource("sonar-java-plugin-4.9.0.9858.jar")
-                .getFile();
-        return Paths.get(new File(filePath).getAbsolutePath());
+        ensurePlugin();
+        return Paths.get(new File(PLUG_IN_FILE).getAbsolutePath());
     }
 
     @Override
@@ -40,12 +29,17 @@ public class JavaAnalyzer extends BaseAnalyzer {
         return "java";
     }
 
-    private static String sampleCode() {
-        return "public class Hello {\n"
-                + "  private int add_number(int a, int b) {\n"
-                + " int c = 100; "
-                + "    return a + b;\n"
-                + "  }\n"
-                + "}\n";
+
+    private void ensurePlugin() {
+        File dest = new File(PLUG_IN_FILE);
+        if (dest.isFile()) {
+            return;
+        }
+        URL inputUrl = JavaAnalyzer.class.getClassLoader().getResource(PLUG_IN_FILE);
+        try {
+            FileUtils.copyURLToFile(inputUrl, dest);
+        } catch (IOException ex) {
+            log.error("Error with init plugin", ex);
+        }
     }
 }
