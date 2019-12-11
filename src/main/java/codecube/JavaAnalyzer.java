@@ -1,6 +1,9 @@
 package codecube;
 
 import codecube.core.AnalyzerResult;
+
+import java.io.File;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -25,8 +28,11 @@ public class JavaAnalyzer extends BaseAnalyzer {
 
     @Override
     Path findPluginFile() {
-        return Paths.get("C:/Users/biyan/Documents/tools/CodeCube/codecube/plugins/"
-                + "sonar-java-plugin-4.9.0.9858.jar");
+        String filePath = JavaAnalyzer.class
+                .getClassLoader()
+                .getResource("sonar-java-plugin-4.9.0.9858.jar")
+                .getFile();
+        return Paths.get(new File(filePath).getAbsolutePath());
     }
 
     @Override
