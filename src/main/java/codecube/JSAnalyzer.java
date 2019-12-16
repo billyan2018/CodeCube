@@ -1,22 +1,11 @@
 package codecube;
 
-import codecube.core.AnalyzerResult;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class JSAnalyzer extends BaseAnalyzer {
 
-    public static void main(String[] args) {
-        final JSAnalyzer analyzer = new JSAnalyzer();
-        AnalyzerResult result =  analyzer.analyze(sampleCode());
-
-        result.issues().forEach(
-                item -> System.out.println(
-                        "" + item.getStartLine() + ":" + item.getRuleName()
-                )
-        );
-    }
-
+    private static final String  PLUG_IN_FILE= "sonar-javascript-plugin-3.3.0.5702.jar";
     @Override
     String language() {
         return "javascript";
@@ -24,8 +13,8 @@ public class JSAnalyzer extends BaseAnalyzer {
 
     @Override
     Path findPluginFile() {
-        return Paths.get("/Users/work/Documents/Tools/java-libs/sonar-java/"
-                + "sonar-javascript-plugin-3.3.0.5702.jar");
+        ensurePlugin(PLUG_IN_FILE);
+        return Paths.get(PLUG_IN_FILE);
     }
 
     @Override
@@ -33,7 +22,4 @@ public class JSAnalyzer extends BaseAnalyzer {
         return "js";
     }
 
-    private static String sampleCode() {
-        return "const items: <any>[] = [];\n" + "items.push('aaa');\n" + "console.log(items)";
-    }
 }

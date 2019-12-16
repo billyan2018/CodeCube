@@ -20,7 +20,7 @@ class JavaAnalyzer extends BaseAnalyzer {
 
     @Override
     Path findPluginFile() {
-        ensurePlugin();
+        ensurePlugin(PLUG_IN_FILE);
         return Paths.get(new File(PLUG_IN_FILE).getAbsolutePath());
     }
 
@@ -29,17 +29,4 @@ class JavaAnalyzer extends BaseAnalyzer {
         return "java";
     }
 
-
-    private void ensurePlugin() {
-        File dest = new File(PLUG_IN_FILE);
-        if (dest.isFile()) {
-            return;
-        }
-        URL inputUrl = JavaAnalyzer.class.getClassLoader().getResource(PLUG_IN_FILE);
-        try {
-            FileUtils.copyURLToFile(inputUrl, dest);
-        } catch (IOException ex) {
-            log.error("Error with init plugin", ex);
-        }
-    }
 }

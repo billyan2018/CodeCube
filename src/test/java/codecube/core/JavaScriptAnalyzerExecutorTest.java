@@ -1,5 +1,8 @@
 package codecube.core;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class JavaScriptAnalyzerExecutorTest extends AbstractAnalyzerExecutorTest {
 
   @Override
@@ -33,5 +36,11 @@ public class JavaScriptAnalyzerExecutorTest extends AbstractAnalyzerExecutorTest
   @Override
   int symbolRefCount() {
     return 4;
+  }
+
+  @Override
+  Path findPluginFile() {
+
+    return Paths.get("sonar-java-plugin-4.9.0.9858.jar");
   }
 }

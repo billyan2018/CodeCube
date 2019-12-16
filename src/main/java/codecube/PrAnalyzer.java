@@ -5,23 +5,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import codecube.core.AnalyzerResult;
 import codecube.domain.PullFile;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 
 @Slf4j
 @RequiredArgsConstructor
 public class PrAnalyzer {
 
     private final ObjectMapper mapper = new ObjectMapper();
-    private final JavaAnalyzer analyzer = new JavaAnalyzer();
+    private static final Map<String, BaseAnalyzer> ANALYZERS;
 
     private final String githubToken;
     private final String prUrl;
+
+    static {
+        Map<String, BaseAnalyzer> temp = new HashMap<>();
+        temp.put("java", new JavaAnalyzer());
+        temp.put("js", new JSAnalyzer());
+        ANALYZERS = Collections.unmodifiableMap(temp);
+    }
 
     List<PullFile> retrieveFiles() throws IOException {
         String host = prUrl.replace("https://github.com/", "https://api.github.com/repos/")
@@ -47,7 +52,9 @@ public class PrAnalyzer {
         List<PullFile> files = retrieveFiles();
         for (PullFile file : files) {
             System.out.println("======" + file.getFilename());
-            if (!file.getFilename().endsWith(analyzer.fileExtension())) {
+            String fileExtension = FilenameUtils.getExtension(file.getFilename());
+            BaseAnalyzer analyzer = ANALYZERS.get(fileExtension);
+            if (null == analyzer) {
                 continue;
             }
 
@@ -60,9 +67,16 @@ public class PrAnalyzer {
                        boolean inScope = isInChange(changedLines, issue.getStartLine(), issue.getEndLine());
 
                        String symbol = inScope ? "Y" : "N";
-                       if (inScope) {
-                           System.out.println(symbol + "[" + issue.getStartLine() + "~" + issue.getEndLine() + "]:" + issue.getRuleName());
+                       if (!"Package declaration should match source file directory".equals(issue.getRuleName())) {
+                           System.out.println(symbol
+                                   + "[" + issue.getStartLine()
+                                   + "~" + issue.getEndLine() + "]:"
+                                   + issue.getSeverity() + ":"
+                                   + issue.getType() + ":"
+                                   + issue.getRuleName());
+
                        }
+
                    }
             );
             result.errors().forEach(analysisError ->

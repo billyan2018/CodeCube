@@ -57,3 +57,4 @@ build/classes/java/main/org/sonarsource/sonarlint/core/util/package-info.class
 src/main/java/codecube/utils/GitHubToken.java
 build/
 .gradle/
+sonar-java-plugin-4.9.0.9858.jar

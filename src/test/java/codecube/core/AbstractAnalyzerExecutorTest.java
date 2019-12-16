@@ -27,11 +27,7 @@ public abstract class AbstractAnalyzerExecutorTest {
     return null;
   }
 
-  private static Path findPluginFile() throws IOException {
-
-    return Paths.get("C:/Users/biyan/Documents/tools/CodeCube/codecube/plugins/"
-            + "sonar-java-plugin-4.9.0.9858.jar");
-  }
+  abstract Path findPluginFile();
 
   abstract String languageCode();
 
