@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
 public abstract class AbstractAnalyzerExecutorTest {
+  
 
   private  AnalyzerExecutor executor = new AnalyzerExecutorImpl();
 
