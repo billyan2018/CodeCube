@@ -22,6 +22,7 @@ public abstract class AbstractAnalyzerExecutorTest {
     } catch (IOException e) {
       e.printStackTrace();
       fail();
+      throw new Exception(e);
     }
     // unreachable
     return null;
