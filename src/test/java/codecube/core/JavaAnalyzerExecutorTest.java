@@ -12,11 +12,11 @@ public class JavaAnalyzerExecutorTest extends AbstractAnalyzerExecutorTest {
 
   @Override
   String validExampleCode() {
-    return "public class Hello {\n" +
-      "  private int add(int a, int b) {\n" +
-      "    return a + b;\n" +
-      "  }\n" +
-      "}\n";
+    return "public class Hello {\n" 
+    +   "  private int add(int a, int b) {\n"
+    +  "    return a + b;\n"
+    +  "  }\n"
+    +  "}\n";
   }
 
   @Override
