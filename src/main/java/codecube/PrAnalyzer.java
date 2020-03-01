@@ -24,7 +24,7 @@ public class PrAnalyzer {
     static {
         Map<String, BaseAnalyzer> temp = new HashMap<>();
         temp.put("java", new JavaAnalyzer());
-        temp.put("js", new JSAnalyzer());
+
         ANALYZERS = Collections.unmodifiableMap(temp);
     }
 

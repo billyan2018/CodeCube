@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'io.github.ddimtirov.codacy' version '0.1.0'
 }
 
 group 'CodeCube'
@@ -8,7 +9,11 @@ version '1.0'
 sourceCompatibility = 1.8
 
 repositories {
-    mavenCentral()
+
+    maven {
+        url "https://jcenter.bintray.com"
+    }
+
 }
 
 configurations {
@@ -52,4 +57,16 @@ jar {
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
+}
+jacocoTestReport {
+    //cleaning up the JiBx classes to jacoco will not cause problems for CareDiscovery
+    doFirst {
+        delete fileTree(dir: "${buildDir}/classes", include: "com/sonar/sslr/impl/typed/DelayedRuleInvocationExpressi\n" +
+                "on")
+    }
+}
+
+codacy {
+
+    projectToken = '2d2c3bf4d3b64f76acda22aa905159d1'
 }
