@@ -11,10 +11,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
 public abstract class AbstractAnalyzerExecutorTest {
+  
 
-  private final AnalyzerExecutor executor = new AnalyzerExecutorImpl();
+  private  AnalyzerExecutor executor = new AnalyzerExecutorImpl();
 
-  private final LanguagePlugin languagePlugin = newLanguagePlugin();
+   final LanguagePlugin languagePlugin = newLanguagePlugin();
 
   private LanguagePlugin newLanguagePlugin() {
     try {
