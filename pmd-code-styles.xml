@@ -1,0 +1,57 @@
+<!--
+
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+<ruleset xmlns="http://pmd.sourceforge.net/ruleset/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         name="EDM PMD Code Styles Ruleset"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+    <description>
+    </description>
+    <include-pattern>.*/com/kingland/.*.java</include-pattern>
+    <!--    High Priority-->
+    <rule ref="category/java/codestyle.xml/AvoidUsingNativeCode"/>
+    <rule ref="category/java/codestyle.xml/BooleanGetMethodName"/>
+    <rule ref="category/java/codestyle.xml/CallSuperInConstructor"/>
+    <rule ref="category/java/codestyle.xml/DuplicateImports"/>
+    <rule ref="category/java/codestyle.xml/EmptyMethodInAbstractClassShouldBeAbstract"/>
+    <rule ref="category/java/codestyle.xml/ExtendsObject"/>
+    <rule ref="category/java/codestyle.xml/IdenticalCatchBranches"/>
+    <rule ref="category/java/codestyle.xml/UseDiamondOperator"/>
+
+    <!--    Middle Priority-->
+    <rule ref="category/java/codestyle.xml/AvoidProtectedFieldInFinalClass"/>
+    <rule ref="category/java/codestyle.xml/AvoidProtectedMethodInFinalClassNotExtending"/>
+    <rule ref="category/java/codestyle.xml/ControlStatementBraces"/>
+    <rule ref="category/java/codestyle.xml/PrematureDeclaration"/>
+    <rule ref="category/java/codestyle.xml/UnnecessaryReturn"/>
+    <rule ref="category/java/codestyle.xml/UselessParentheses"/>
+
+    <!--    Low Priority -->
+    <rule ref="category/java/codestyle.xml/AbstractNaming"/>
+    <rule ref="category/java/codestyle.xml/AtLeastOneConstructor"/>
+    <rule ref="category/java/codestyle.xml/ConfusingTernary"/>
+    <rule ref="category/java/codestyle.xml/DontImportJavaLang"/>
+    <rule ref="category/java/codestyle.xml/FieldDeclarationsShouldBeAtStartOfClass"/>
+    <rule ref="category/java/codestyle.xml/ForLoopShouldBeWhileLoop"/>
+    <rule ref="category/java/codestyle.xml/UnnecessaryAnnotationValueElement"/>
+    <rule ref="category/java/codestyle.xml/TooManyStaticImports"/>
+    <rule ref="category/java/codestyle.xml/UnnecessaryFullyQualifiedName"/>
+    <rule ref="category/java/codestyle.xml/UnnecessaryLocalBeforeReturn"/>
+    <rule ref="category/java/codestyle.xml/UseUnderscoresInNumericLiterals"/>
+
+</ruleset>
