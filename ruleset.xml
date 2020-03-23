@@ -23,7 +23,7 @@ under the License.
          xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
     <description>
     </description>
-    <include-pattern>.*/com/kingland/.*.java</include-pattern>
+   
     <!--    High Priority-->
     <rule ref="category/java/bestpractices.xml/AvoidPrintStackTrace"/>
     <rule ref="category/java/bestpractices.xml/AvoidReassigningLoopVariables"/>
