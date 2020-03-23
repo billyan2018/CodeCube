@@ -58,13 +58,7 @@ jar {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
-jacocoTestReport {
-    //cleaning up the JiBx classes to jacoco will not cause problems for CareDiscovery
-    doFirst {
-        delete fileTree(dir: "${buildDir}/classes", include: "com/sonar/sslr/impl/typed/DelayedRuleInvocationExpressi\n" +
-                "on")
-    }
-}
+
 
 codacy {
 
