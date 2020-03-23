@@ -1,62 +1,42 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0"?>
 
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
+<ruleset name="Basic"
+    xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+  <description>
+The Basic ruleset contains a collection of good practices which should be followed.
+  </description>
 
-http://www.apache.org/licenses/LICENSE-2.0
+    <!-- Rules, that have been moved into a category -->
+    <rule ref="category/java/errorprone.xml/AvoidBranchingStatementAsLastInLoop" deprecated="true" />
+    <rule ref="category/java/errorprone.xml/AvoidDecimalLiteralsInBigDecimalConstructor" deprecated="true" />
+    <rule ref="category/java/errorprone.xml/AvoidMultipleUnaryOperators" deprecated="true" />
+    <rule ref="category/java/errorprone.xml/AvoidUsingOctalValues" deprecated="true" />
+    <rule ref="category/java/errorprone.xml/BrokenNullCheck" deprecated="true" />
+    <rule ref="category/java/errorprone.xml/CheckSkipResult" deprecated="true" />
+    <rule ref="category/java/errorprone.xml/ClassCastExceptionWithToArray" deprecated="true" />
+    <rule ref="category/java/errorprone.xml/DontUseFloatTypeForLoopIndices" deprecated="true" />
+    <rule ref="category/java/errorprone.xml/JumbledIncrementer" deprecated="true" />
+    <rule ref="category/java/errorprone.xml/MisplacedNullCheck" deprecated="true" />
+    <rule ref="category/java/errorprone.xml/OverrideBothEqualsAndHashcode" deprecated="true" />
+    <rule ref="category/java/errorprone.xml/ReturnFromFinallyBlock" deprecated="true" />
+    <rule ref="category/java/errorprone.xml/UnconditionalIfStatement" deprecated="true" />
 
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
--->
-<ruleset xmlns="http://pmd.sourceforge.net/ruleset/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         name="EDM PMD Best Practices Ruleset"
-         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
-    <description>
-    </description>
-   
-    <!--    High Priority-->
-    <rule ref="category/java/bestpractices.xml/AvoidPrintStackTrace"/>
-    <rule ref="category/java/bestpractices.xml/AvoidReassigningLoopVariables"/>
-    <rule ref="category/java/bestpractices.xml/AvoidStringBufferField"/>
-    <rule ref="category/java/bestpractices.xml/DefaultLabelNotLastInSwitchStmt"/>
-    <rule ref="category/java/bestpractices.xml/MissingOverride"/>
-    <rule ref="category/java/bestpractices.xml/PositionLiteralsFirstInCaseInsensitiveComparisons"/>
-    <rule ref="category/java/bestpractices.xml/PositionLiteralsFirstInComparisons"/>
-    <rule ref="category/java/bestpractices.xml/PreserveStackTrace"/>
-    <rule ref="category/java/bestpractices.xml/ReplaceHashtableWithMap"/>
-    <rule ref="category/java/bestpractices.xml/ReplaceVectorWithList"/>
-    <rule ref="category/java/bestpractices.xml/UnusedImports"/>
-    <rule ref="category/java/bestpractices.xml/UnusedLocalVariable"/>
-    <rule ref="category/java/bestpractices.xml/UseCollectionIsEmpty"/>
-    <rule ref="category/java/bestpractices.xml/UseTryWithResources"/>
+    <rule ref="category/java/multithreading.xml/AvoidThreadGroup" deprecated="true" />
+    <rule ref="category/java/multithreading.xml/DontCallThreadRun" deprecated="true" />
+    <rule ref="category/java/multithreading.xml/DoubleCheckedLocking" deprecated="true" />
 
-    <!--    Middle Priority-->
-    <rule ref="category/java/bestpractices.xml/DoubleBraceInitialization"/>
-    <rule ref="category/java/bestpractices.xml/AbstractClassWithoutAbstractMethod"/>
-    <rule ref="category/java/bestpractices.xml/ForLoopCanBeForeach"/>
-    <rule ref="category/java/bestpractices.xml/ForLoopVariableCount"/>
-    <rule ref="category/java/bestpractices.xml/GuardLogStatement"/>
-    <rule ref="category/java/bestpractices.xml/JUnit4TestShouldUseTestAnnotation"/>
-    <rule ref="category/java/bestpractices.xml/JUnitAssertionsShouldIncludeMessage"/>
-    <rule ref="category/java/bestpractices.xml/ReplaceEnumerationWithIterator"/>
-    <rule ref="category/java/bestpractices.xml/UnusedFormalParameter"/>
+    <rule ref="category/java/bestpractices.xml/AvoidUsingHardCodedIP" deprecated="true" />
+    <rule ref="category/java/bestpractices.xml/CheckResultSet" deprecated="true" />
 
-    <!--    Low Priority -->
-    <rule ref="category/java/bestpractices.xml/AccessorMethodGeneration"/>
-    <rule ref="category/java/bestpractices.xml/AccessorClassGeneration"/>
-    <rule ref="category/java/bestpractices.xml/ArrayIsStoredDirectly"/>
-    <rule ref="category/java/bestpractices.xml/AvoidReassigningParameters"/>
-    <rule ref="category/java/bestpractices.xml/MethodReturnsInternalArray"/>
-    <rule ref="category/java/bestpractices.xml/SwitchStmtsShouldHaveDefault"/>
-    <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod"/>
+    <rule ref="category/java/codestyle.xml/ExtendsObject" deprecated="true" />
+    <rule ref="category/java/codestyle.xml/ForLoopShouldBeWhileLoop" deprecated="true" />
+
+    <rule ref="category/java/performance.xml/BigIntegerInstantiation" deprecated="true" />
+    <rule ref="category/java/performance.xml/BooleanInstantiation" deprecated="true" />
+
+    <rule ref="category/java/design.xml/CollapsibleIfStatements" deprecated="true" />
+    <rule ref="category/java/design.xml/SimplifiedTernary" deprecated="true" />
+
 </ruleset>
