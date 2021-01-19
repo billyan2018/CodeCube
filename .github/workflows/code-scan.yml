@@ -1,0 +1,9 @@
+name: PMD Source Code Analyzer on Push
+on: [push]
+jobs:
+  pmd:
+    runs-on: ubuntu-latest    
+    steps:
+      - uses: sfdx-actions/setup-pmd@v1
+      - name: run-pmd
+        run: pmd -d ./force-app/main/default/classes -R pmd-code-styles.xml -f html
