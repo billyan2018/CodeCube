@@ -1,0 +1,26 @@
+{
+
+  "tools":[
+    {
+      "name":"checkov",
+      "patterns" : [ {
+    "patternId" : "CKV_AWS_1",
+    "level" : "Warning",
+    "category" : "Security",
+    "subcategory" : "Auth",
+    "parameters" : [ ],
+    "languages" : [ ],
+    "enabled" : true
+  }, {
+    "patternId" : "CKV_AWS_10",
+    "level" : "Warning",
+    "category" : "Security",
+    "subcategory" : "Auth",
+    "parameters" : [ ],
+    "languages" : [ ],
+    "enabled" : true
+  }
+  ]
+    }
+  ]
+}
