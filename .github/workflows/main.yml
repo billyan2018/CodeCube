@@ -26,7 +26,7 @@ jobs:
     - name: Only keep issues in changed files
       run: |
          /usr/bin/docker run --entrypoint /usr/bin/node \
-         --volume "$SOURCE_CODE":/code \
+         --volume "$PWD":/code \
          --volume "${PWD}/raw_codeclimate.json":/code/raw_codeclimate.json \
          registry.gitlab.com/billyan2018/codeclimate-lite  "/usr/src/app/report-processor/main.js"
     - name: Archive code coverage results
