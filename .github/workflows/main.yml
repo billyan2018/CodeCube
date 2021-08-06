@@ -22,7 +22,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: code scan
       run: |
-        && export SOURCE_CODE="$PWD" \
+        export SOURCE_CODE="$PWD" \
         && export REPORT_FORMAT="json" \
         && ln -s /github/workspace /code
         && /usr/src/app/bin/codeclimate   analyze  -f "$REPORT_FORMAT" > "/code/raw_codeclimate.$REPORT_FORMAT" \
