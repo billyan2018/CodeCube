@@ -1,15 +1,10 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CodeQuality
 
-# Controls when the workflow will run
 on: [push]
 
 jobs:
   codeQuality:
     runs-on: ubuntu-latest
-    # container:
-    #  image: registry.gitlab.com/billyan2018/codeclimate-lite
     steps:  
     - uses: actions/checkout@v2
     - name: code scan
@@ -28,9 +23,14 @@ jobs:
          /usr/bin/docker run --entrypoint /usr/bin/node \
          --volume "$PWD":/code \
          registry.gitlab.com/billyan2018/codeclimate-lite  "/usr/src/app/report-processor/main.js"
-    - name: Archive code coverage results
+    - name: Archive code quality report
       uses: actions/upload-artifact@v2
       with:
         name: code-quality-report
-        path: '*codeclimate.json'
+        path: 'raw_codeclimate.json'
+    - name: Archive changed code quality
+      uses: actions/upload-artifact@v2
+      with:
+        name: code-quality-report
+        path: 'changed_codeclimate.json'
     
