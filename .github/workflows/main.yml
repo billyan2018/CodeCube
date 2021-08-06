@@ -24,6 +24,6 @@ jobs:
       run: |
         export SOURCE_CODE="$PWD" \
         && export REPORT_FORMAT="json" \
-        && ln -s /github/workspace /code
+        && ln -s /github/workspace /code \
         && /usr/src/app/bin/codeclimate   analyze  -f "$REPORT_FORMAT" > "/code/raw_codeclimate.$REPORT_FORMAT" \
     
