@@ -27,11 +27,10 @@ jobs:
       run: |
          /usr/bin/docker run --entrypoint /usr/bin/node \
          --volume "$PWD":/code \
-         --volume "${PWD}/raw_codeclimate.json":/code/raw_codeclimate.json \
          registry.gitlab.com/billyan2018/codeclimate-lite  "/usr/src/app/report-processor/main.js"
     - name: Archive code coverage results
       uses: actions/upload-artifact@v2
       with:
         name: code-quality-report
-        path: '*raw_codeclimate.json'
+        path: '*codeclimate.json'
     
