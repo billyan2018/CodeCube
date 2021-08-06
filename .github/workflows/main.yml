@@ -22,12 +22,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: code scan
       run: |
-         start=`date +%s` \
-         && export SOURCE_CODE="$PWD" \
+         pwd && ls -l && \
+         export SOURCE_CODE="$PWD" \
          && export REPORT_FORMAT="json" \
-         && docker run \
-          --volume "$SOURCE_CODE":/code \
-          --volume /tmp/cc:/tmp/cc \
-              registry.gitlab.com/billyan2018/codeclimate-lite analyze  -f "$REPORT_FORMAT" > "/code/raw_codeclimate.$REPORT_FORMAT" \
-           && end=`date +%s` && runtime=$((end-start)) && echo $runtime
+         && /usr/src/app/bin/codeclimat analyze  -f "$REPORT_FORMAT" > "/code/raw_codeclimate.$REPORT_FORMAT" 
     
