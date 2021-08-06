@@ -19,13 +19,19 @@ jobs:
     - name: test
       run: |
           ls $HOME
+          echo 'files:'
           cat $HOME/files.json
+          echo 'files modified:'
           cat $HOME/files_modified.json
+          echo 'files added:'
           cat $HOME/files_added.json
+          echo 'files deleted:'
           cat $HOME/files_deleted.json
-          echo '${{ steps.file_changes.outputs.files_modified}}'
-          echo '${{ steps.file_changes.outputs.files_added}}'
-          echo '${{ steps.file_changes.outputs.files_deleted}}'
+          echo 'all: ${{ steps.file_changes.outputs.files}}'
+          
+          echo 'modified: ${{ steps.file_changes.outputs.files_modified}}'
+          echo 'added:${{ steps.file_changes.outputs.files_added}}'
+          echo 'deleted:${{ steps.file_changes.outputs.files_deleted}}'
     - name: code scan
       run: |
          pwd && ls -l && \
