@@ -19,6 +19,7 @@ public abstract class AbstractAnalyzerExecutorTest {
 
   private LanguagePlugin newLanguagePlugin() {
     try {
+      String anotherNotUsed = "anotherNotUsed";
       String languageCode = languageCode();
       String inputFileExtension = InputFileExtensions.fromLanguageCode(languageCode);
       return new LanguagePlugin(findPluginFile().toUri().toURL(), inputFileExtension);
