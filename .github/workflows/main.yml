@@ -31,4 +31,9 @@ jobs:
           --volume /tmp/cc:/tmp/cc \
          registry.gitlab.com/billyan2018/codeclimate-lite analyze -f "$REPORT_FORMAT" > "raw_codeclimate.$REPORT_FORMAT" \
          && end=`date +%s` && runtime=$((end-start)) && echo $runtime 
+           - name: Archive code coverage results
+    - uses: actions/upload-artifact@v2
+      with:
+        name: code-quality-report
+        path: raw_codeclimate.json
     
