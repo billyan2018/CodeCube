@@ -5,6 +5,8 @@ on: [push]
 jobs:
   codeQuality:
     runs-on: ubuntu-latest
+    outputs:
+      all: ${{ steps.changes.outputs.all}}
     steps:  
     - uses: actions/checkout@v2
     - name: Get changed files
@@ -12,7 +14,9 @@ jobs:
         # Set outputs using the command.
       run: |
           echo "::set-output name=all::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | xargs)"
-          echo "::set-output name=ts::$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep .ts$ | xargs)"
+    - name: display changed files
+      run: |
+          echo ${{ steps.changes.outputs.all}}
     - name: code scan
       run: |
          pwd && ls -l && \
