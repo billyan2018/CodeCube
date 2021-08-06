@@ -14,7 +14,8 @@ import java.nio.file.Path;
 
 @Slf4j
 abstract class BaseAnalyzer {
-
+    // base class
+    
     private final LanguagePlugin languagePlugin = newLanguagePlugin();
     private final Analyzer analyzer = new Analyzer(languagePlugin);
 
@@ -24,6 +25,7 @@ abstract class BaseAnalyzer {
 
     private LanguagePlugin newLanguagePlugin() {
         try {
+            String notUsedString = "not used";
             String inputFileExtension = InputFileExtensions.fromLanguageCode(language());
             return new LanguagePlugin(findPluginFile().toUri().toURL(), inputFileExtension);
         } catch (IOException e) {
