@@ -29,6 +29,6 @@ jobs:
          && /usr/bin/docker run \
          --volume "$SOURCE_CODE":/code \
           --volume /tmp/cc:/tmp/cc \
-         registry.gitlab.com/billyan2018/codeclimate-lite analyze  -f "$REPORT_FORMAT" > "/code/raw_codeclimate.$REPORT_FORMAT" \
+         registry.gitlab.com/billyan2018/codeclimate-lite analyze  -f "$REPORT_FORMAT" > "raw_codeclimate.$REPORT_FORMAT" \
          && end=`date +%s` && runtime=$((end-start)) && echo $runtime 
     
