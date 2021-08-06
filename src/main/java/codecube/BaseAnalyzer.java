@@ -14,7 +14,7 @@ import java.nio.file.Path;
 
 @Slf4j
 abstract class BaseAnalyzer {
-
+// base class
     private final LanguagePlugin languagePlugin = newLanguagePlugin();
     private final Analyzer analyzer = new Analyzer(languagePlugin);
 
