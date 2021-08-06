@@ -1,0 +1,29 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  testbox:
+    runs-on: ubuntu-latest
+    container:
+      image: registry.gitlab.com/billyan2018/codeclimate-lite
+    steps:  
+    - uses: actions/checkout@v2
+    - name: code scan
+      run: |
+        && export SOURCE_CODE="$PWD" \
+        && export REPORT_FORMAT="json" \
+        && ln -s /github/workspace /code
+        && /usr/src/app/bin/codeclimate   analyze  -f "$REPORT_FORMAT" > "/code/raw_codeclimate.$REPORT_FORMAT" \
+    
