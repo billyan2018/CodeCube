@@ -11,7 +11,7 @@ jobs:
       id: changes
         # Set outputs using the command.
       run: |
-         git diff --name-only master...
+         git diff --name-only origin/master...
     - name: code scan
       run: |
          pwd && ls -l && \
