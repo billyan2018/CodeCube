@@ -15,12 +15,9 @@ jobs:
          echo "$( git diff --name-only origin/master...)"
          echo "::set-output name=changedFiles :: $( git diff --name-only origin/master...)"
       id: git-diff
-    - name: Get changed files
-      id: changed-files
-      uses: tj-actions/changed-files@v9.2
     - name: List all modified files
       run: | 
-          for file in "${{ steps.changed-files.outputs.all_modified_files }}"; do
+          for file in "${{ steps.git-diff.outputs.changedFiles }}"; do
             echo "$file was modified"
           done
     - name: code scan
@@ -38,7 +35,7 @@ jobs:
       run: |
          /usr/bin/docker run --entrypoint /usr/bin/node \
          --volume "$PWD":/code \
-         registry.gitlab.com/billyan2018/codeclimate-lite  "/usr/src/app/report-processor/main.js" ${{join(steps.git-diff.outputs.changedFiles, '\n')}}
+         registry.gitlab.com/billyan2018/codeclimate-lite  "/usr/src/app/report-processor/main.js" ${{steps.git-diff.outputs.changedFiles}}
     - name: Archive code quality report
       uses: actions/upload-artifact@v2
       with:
