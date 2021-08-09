@@ -13,13 +13,11 @@ jobs:
       run: |
          git fetch origin master 
          changedFiles=$( git diff --name-only origin/master...)
-         echo "111"
          echo $changedFiles
-         echo "222"
-         echo "::set-output name=changedFiles :: $changedFiles"
-         echo "changedFiles<<EOF" >> $GITHUB_ENV
-         echo "$changedFiles" >> $GITHUB_ENV
-         echo "EOF" >> $GITHUB_ENV
+         changedFiles="${changedFiles//'%'/'%25'}"
+         changedFiles="${changedFiles//$'\n'/'%0A'}"
+         changedFiles="${changedFiles//$'\r'/'%0D'}"
+         echo "changedFiles=$changedFiles" >> $GITHUB_ENV
       id: git-diff
     - name: List all modified files
       run: | 
