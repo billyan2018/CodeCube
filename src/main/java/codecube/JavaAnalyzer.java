@@ -6,6 +6,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+// another line
 @Slf4j
 class JavaAnalyzer extends BaseAnalyzer {
 
