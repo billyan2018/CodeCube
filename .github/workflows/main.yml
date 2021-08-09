@@ -7,6 +7,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:  
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
     - name: Get changed files
       id: changed-files
       uses: tj-actions/changed-files@v9.2
