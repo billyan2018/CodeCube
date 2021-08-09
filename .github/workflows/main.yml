@@ -12,12 +12,8 @@ jobs:
     - name: run git diff
       run: |
          git fetch origin master 
-         changedFiles=$( git diff --name-only origin/master...)
+         changedFiles=$( git diff --name-only origin/master... | tr '\n' ' ')
          echo $changedFiles
-         echo $changedFiles | tr '\n' ' '
-         changedFiles="${changedFiles//'%'/'%25'}"
-         changedFiles="${changedFiles//$'\n'/'%0A'}"
-         changedFiles="${changedFiles//$'\r'/'%0D'}"
          echo "changedFiles=$changedFiles" >> $GITHUB_ENV
       id: git-diff
     - name: code scan
