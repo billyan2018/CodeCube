@@ -12,16 +12,8 @@ jobs:
     - name: run git diff
       run: |
          git fetch origin master 
-         ccc=$(cat << EOF
-          "$( git diff --name-only origin/master...)"
-          EOF
-          )
-         echo $ccc
-         echo "------"
-         echo "$( git diff --name-only origin/master...)"
-         echo "===="
          echo "111"
-         echo "aaa=$( git diff --name-only origin/master...)"
+         aaa=$( git diff --name-only origin/master...)
          echo "111"
          echo $aaa
          echo "222"
