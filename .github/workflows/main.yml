@@ -39,5 +39,9 @@ jobs:
         path: |
           raw_codeclimate.json
           changed_codeclimate.json
+    - name: change lines
+      id: changed-lines
+      uses: billyan2018/codeclimate-changedlines@0.2
+
 
     
