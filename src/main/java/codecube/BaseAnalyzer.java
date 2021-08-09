@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 
+//add a comment line
 @Slf4j
 abstract class BaseAnalyzer {
 
