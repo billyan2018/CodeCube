@@ -12,7 +12,9 @@ jobs:
     - name: run git diff
       run: |
          git fetch origin master 
+         echo "------"
          echo "$( git diff --name-only origin/master...)"
+         echo "===="
          echo "::set-output name=changedFiles :: $( git diff --name-only origin/master...)"
       id: git-diff
     - name: List all modified files
