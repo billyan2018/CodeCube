@@ -40,6 +40,6 @@ jobs:
     - name: Archive changed code quality
       uses: actions/upload-artifact@v2
       with:
-        name: code-quality-report
+        name: changed-code-quality-report
         path: 'changed_codeclimate.json'
     
