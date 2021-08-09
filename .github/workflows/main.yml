@@ -12,12 +12,11 @@ jobs:
     - name: run git diff
       run: |
          git fetch origin master 
+         changedFiles=$( git diff --name-only origin/master...)
          echo "111"
-         aaa=$( git diff --name-only origin/master...)
-         echo "111"
-         echo $aaa
+         echo changedFiles
          echo "222"
-         echo "::set-output name=changedFiles :: $( git diff --name-only origin/master...)"
+         echo "::set-output name=changedFiles :: $changedFiles"
       id: git-diff
     - name: List all modified files
       run: | 
