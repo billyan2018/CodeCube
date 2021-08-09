@@ -32,7 +32,7 @@ jobs:
       run: |
          /usr/bin/docker run --entrypoint /usr/bin/node \
          --volume "$PWD":/code \
-         registry.gitlab.com/billyan2018/codeclimate-lite  "/usr/src/app/report-processor/main.js"
+         registry.gitlab.com/billyan2018/codeclimate-lite  "/usr/src/app/report-processor/main.js" "${{ steps.changed-files.outputs.all_modified_files }}"
     - name: Archive code quality report
       uses: actions/upload-artifact@v2
       with:
