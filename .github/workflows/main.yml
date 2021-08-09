@@ -11,7 +11,7 @@ jobs:
         fetch-depth: 0  # Set fetch-depth: 0 to fetch all history for all branches and tags.
     - name: run git diff
       run: |
-         git pull &&\
+         git fetch origin master &&\
          git diff --name-only master...
     - name: Get changed files
       id: changed-files
