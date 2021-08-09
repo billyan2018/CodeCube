@@ -8,10 +8,13 @@ jobs:
     steps:  
     - uses: actions/checkout@v2
     - name: Get changed files
-      id: changes
-        # Set outputs using the command.
+      id: changed-files
+      uses: tj-actions/changed-files@v9.2
+    - name: List all modified files
       run: |
-         git diff --name-only origin/master...
+          for file in "${{ steps.changed-files.outputs.all_modified_files }}"; do
+            echo "$file was modified"
+          done
     - name: code scan
       run: |
          pwd && ls -l && \
