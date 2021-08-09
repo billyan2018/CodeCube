@@ -17,10 +17,13 @@ jobs:
          echo $changedFiles
          echo "222"
          echo "::set-output name=changedFiles :: $changedFiles"
+         echo "changedFiles<<EOF" >> $GITHUB_ENV
+         echo "$changedFiles" >> $GITHUB_ENV
+         echo "EOF" >> $GITHUB_ENV
       id: git-diff
     - name: List all modified files
       run: | 
-          for file in "${{ steps.git-diff.outputs.changedFiles }}"; do
+          for file in "${{ env.changedFiles }}"; do
             echo "$file was modified"
           done
     - name: code scan
@@ -38,7 +41,7 @@ jobs:
       run: |
          /usr/bin/docker run --entrypoint /usr/bin/node \
          --volume "$PWD":/code \
-         registry.gitlab.com/billyan2018/codeclimate-lite  "/usr/src/app/report-processor/main.js" ${{steps.git-diff.outputs.changedFiles}}
+         registry.gitlab.com/billyan2018/codeclimate-lite  "/usr/src/app/report-processor/main.js" ${{ env.changedFiles }}
     - name: Archive code quality report
       uses: actions/upload-artifact@v2
       with:
