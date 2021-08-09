@@ -12,9 +12,8 @@ jobs:
     - name: run git diff
       run: |
          git fetch origin master &&\
-         changedFiles="$( git diff --name-only origin/master...)" && \
-         echo $changedFiles && \
-         echo env.changedFiles
+         echo changedFiles="$( git diff --name-only origin/master...)"  >> $GITHUB_ENV && \
+         echo "${{ env.changedFiles }}"
     - name: Get changed files
       id: changed-files
       uses: tj-actions/changed-files@v9.2
