@@ -15,6 +15,10 @@ jobs:
          echo "------"
          echo "$( git diff --name-only origin/master...)"
          echo "===="
+         echo "111"
+         echo "aaa=$( git diff --name-only origin/master...)"
+         echo $aaa
+         echo "222"
          echo "::set-output name=changedFiles :: $( git diff --name-only origin/master...)"
       id: git-diff
     - name: List all modified files
