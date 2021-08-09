@@ -14,16 +14,12 @@ jobs:
          git fetch origin master 
          changedFiles=$( git diff --name-only origin/master...)
          echo $changedFiles
+         echo $changedFiles | tr '\n' ' '
          changedFiles="${changedFiles//'%'/'%25'}"
          changedFiles="${changedFiles//$'\n'/'%0A'}"
          changedFiles="${changedFiles//$'\r'/'%0D'}"
          echo "changedFiles=$changedFiles" >> $GITHUB_ENV
       id: git-diff
-    - name: List all modified files
-      run: | 
-          for file in "${{ env.changedFiles }}"; do
-            echo "$file was modified"
-          done
     - name: code scan
       run: |
          pwd && ls -l && \
