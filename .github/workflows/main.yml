@@ -11,8 +11,10 @@ jobs:
         fetch-depth: 0  # Set fetch-depth: 0 to fetch all history for all branches and tags.
     - name: run git diff
       run: |
-         git fetch origin master &&\
-         echo changedFiles="$( git diff --name-only origin/master...)"  >> $GITHUB_ENV && \
+         git fetch origin master 
+         echo 'changedFiles<<EOF' >> $GITHUB_ENV
+         "$( git diff --name-only origin/master...)" >> $GITHUB_ENV
+         echo 'EOF' >> $GITHUB_ENV 
          echo "${{ env.changedFiles }}"
     - name: Get changed files
       id: changed-files
