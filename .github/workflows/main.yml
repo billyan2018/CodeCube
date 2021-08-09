@@ -12,12 +12,12 @@ jobs:
     - name: run git diff
       run: |
          git fetch origin master &&\
-         git diff --name-only origin/master...
+         changedFiles="$( git diff --name-only origin/master...)"
     - name: Get changed files
       id: changed-files
       uses: tj-actions/changed-files@v9.2
     - name: List all modified files
-      run: |
+      run: | 
           for file in "${{ steps.changed-files.outputs.all_modified_files }}"; do
             echo "$file was modified"
           done
@@ -36,7 +36,7 @@ jobs:
       run: |
          /usr/bin/docker run --entrypoint /usr/bin/node \
          --volume "$PWD":/code \
-         registry.gitlab.com/billyan2018/codeclimate-lite  "/usr/src/app/report-processor/main.js" "${{ steps.changed-files.outputs.all_modified_files }}"
+         registry.gitlab.com/billyan2018/codeclimate-lite  "/usr/src/app/report-processor/main.js" "${{ env.changedFiles }}"
     - name: Archive code quality report
       uses: actions/upload-artifact@v2
       with:
