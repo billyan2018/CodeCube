@@ -17,6 +17,7 @@ jobs:
          echo "===="
          echo "111"
          echo "aaa=$( git diff --name-only origin/master...)"
+         echo "111"
          echo $aaa
          echo "222"
          echo "::set-output name=changedFiles :: $( git diff --name-only origin/master...)"
