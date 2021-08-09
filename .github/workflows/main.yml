@@ -6,19 +6,9 @@ jobs:
   codeQuality:
     runs-on: ubuntu-latest
     steps:  
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0  # Set fetch-depth: 0 to fetch all history for all branches and tags.
-    - name: run git diff
-      run: |
-         git fetch origin master 
-         changedFiles=$( git diff --name-only origin/master... | tr '\n' ' ')
-         echo $changedFiles
-         echo "changedFiles=$changedFiles" >> $GITHUB_ENV
-      id: git-diff
     - name: change lines
       id: changed-lines
-      uses: billyan2018/codeclimate-changedlines@0.3
+      uses: billyan2018/codeclimate-changedlines@0.4
 
 
     
