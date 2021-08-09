@@ -36,10 +36,8 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: code-quality-report
-        path: 'raw_codeclimate.json'
-    - name: Archive changed code quality
-      uses: actions/upload-artifact@v2
-      with:
-        name: changed-code-quality-report
-        path: 'changed_codeclimate.json'
+        path: |
+          'raw_codeclimate.json'
+          'changed_codeclimate.json'
+
     
