@@ -28,7 +28,8 @@ abstract class BaseAnalyzer {
         try {
             String notUsedString = "not used";
             
-            
+            String notUsedString2 = "not used";
+            int a = 0;
             String inputFileExtension = InputFileExtensions.fromLanguageCode(language());
             return new LanguagePlugin(findPluginFile().toUri().toURL(), inputFileExtension);
         } catch (IOException e) {
