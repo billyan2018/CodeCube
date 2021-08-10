@@ -12,6 +12,8 @@ jobs:
     - name: changed lines
       id: changed-lines
       uses: billyan2018/codeclimate-changed@0.6
+      with:
+        token: ${{ github.token }}
 
 
     
