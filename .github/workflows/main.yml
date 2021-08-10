@@ -6,7 +6,7 @@ jobs:
   codeQuality:
     runs-on: ubuntu-latest
     steps:  
-    - name: change lines
+    - name: changed lines
       id: changed-lines
       uses: billyan2018/codeclimate-changed@0.1
 
