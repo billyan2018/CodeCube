@@ -1,6 +1,9 @@
 name: CodeQuality
 
-on: [push]
+on:
+  pull_request:
+    branches:
+      - '**'
 
 jobs:
   codeQuality:
