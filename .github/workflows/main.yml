@@ -28,6 +28,13 @@ jobs:
       uses: billyan2018/codeclimate-changed@1.0
       with:
         token: ${{ github.token }}
+    - name: Archive code quality report
+      uses: actions/upload-artifact@v2
+      with:
+        name: code-quality-report
+        path: |
+          raw_codeclimate.json
+          changed_codeclimate.json
 
 
     
