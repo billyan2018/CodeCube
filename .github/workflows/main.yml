@@ -25,7 +25,7 @@ jobs:
          && end=`date +%s` && runtime=$((end-start)) && echo $runtime 
     - name: changed lines
       id: changed-lines
-      uses: billyan2018/codeclimate-changed@0.7
+      uses: billyan2018/codeclimate-changed@0.8
       with:
         token: ${{ github.token }}
 
