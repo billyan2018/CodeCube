@@ -17,6 +17,8 @@ jobs:
          --volume "$SOURCE_CODE":/code \
           --volume /tmp/cc:/tmp/cc \
          registry.gitlab.com/billyan2018/codeclimate-lite analyze -f "$REPORT_FORMAT" > "raw_codeclimate.$REPORT_FORMAT" \
+         && /usr/bin/docker run \
+         registry.gitlab.com/billyan2018/codeclimate-lite html raw_codeclimate.$REPORT_FORMAT > gl-code-quality-report.html \ 
          && end=`date +%s` && runtime=$((end-start)) && echo $runtime 
     - name: Only keep issues in changed files
       run: |
@@ -31,6 +33,5 @@ jobs:
     - name: Archive changed code quality
       uses: actions/upload-artifact@v2
       with:
-        name: code-quality-report
-        path: 'changed_codeclimate.json'
-    
+        name: code-quality-report-html
+        path: 'gl-code-quality-report.html'
