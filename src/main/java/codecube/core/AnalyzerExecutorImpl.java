@@ -1,5 +1,6 @@
 package codecube.core;
 
+import org.apache.commons.io.FileUtils;
 import org.sonar.api.batch.fs.TextRange;
 import org.sonar.api.batch.sensor.error.AnalysisError;
 import org.sonar.api.batch.sensor.highlighting.TypeOfText;
@@ -11,6 +12,7 @@ import org.sonarsource.sonarlint.core.client.api.standalone.StandaloneGlobalConf
 import org.sonarsource.sonarlint.core.client.api.standalone.StandaloneSonarLintEngine;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -21,41 +23,20 @@ import java.util.*;
 
 public class AnalyzerExecutorImpl implements AnalyzerExecutor {
 
-  private static Path newDir(Path path) throws IOException {
-    return Files.createDirectories(path);
-  }
 
-  private static Path newTempDir() throws IOException {
-    return Files.createTempDirectory("sonarlint-");
-  }
 
   @Override
-  public AnalyzerResult execute(LanguagePlugin languagePlugin, String code) {
+  public AnalyzerResult execute(LanguagePlugin languagePlugin, String path) throws IOException {
     StandaloneGlobalConfiguration globalConfig = StandaloneGlobalConfiguration.builder()
             .addPlugin(languagePlugin.getUrl())
             .build();
     StandaloneSonarLintEngine engine = new StandaloneSonarLintEngineImpl(globalConfig);
 
-    Path tmp;
-    try {
-      tmp = newTempDir();
-    } catch (IOException e) {
-      throw new IllegalStateException("Could not create temp dir");
-    }
-
-    Path workDir;
-    try {
-      workDir = newDir(tmp.resolve("work"));
-    } catch (IOException e) {
-      throw new IllegalStateException("Could not create workdir");
-    }
-
-    Path path = tmp.resolve("code." + languagePlugin.getInputFileExtension());
-
+    final String code = FileUtils.readFileToString(new File(path), "utf-8");
     ClientInputFile clientInputFile = new ClientInputFile() {
       @Override
       public String getPath() {
-        return path.toString();
+        return path;
       }
 
       @Override
@@ -82,7 +63,7 @@ public class AnalyzerExecutorImpl implements AnalyzerExecutor {
     Iterable<ClientInputFile> inputFiles = Collections.singleton(clientInputFile);
 
     Map<String, String> extraProperties = new HashMap<>();
-    StandaloneAnalysisConfiguration config = new StandaloneAnalysisConfiguration(workDir, inputFiles, extraProperties);
+    StandaloneAnalysisConfiguration config = new StandaloneAnalysisConfiguration(Files.createTempDirectory("sonarlint-"), inputFiles, extraProperties);
 
     List<Issue> issues = new ArrayList<>();
     IssueListener issueListener = issues::add;

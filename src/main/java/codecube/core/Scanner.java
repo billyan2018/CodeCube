@@ -19,17 +19,19 @@
  */
 package codecube.core;
 
-public class Analyzer {
+import java.io.IOException;
+
+public class Scanner {
 
   private final LanguagePlugin languagePlugin;
   private final AnalyzerExecutor executor = new AnalyzerExecutorImpl();
 
-  public Analyzer(LanguagePlugin languagePlugin) {
+  public Scanner(LanguagePlugin languagePlugin) {
     this.languagePlugin = languagePlugin;
   }
 
-  public AnalyzerResult apply(String code) {
-    return executor.execute(languagePlugin, code);
+  public AnalyzerResult apply(String path) throws IOException {
+    return executor.execute(languagePlugin, path);
   }
 
   public String fileExtension() {

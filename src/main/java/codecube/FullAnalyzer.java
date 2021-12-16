@@ -31,8 +31,8 @@ public class FullAnalyzer {
                 continue;
             }
 
-            String source = FileUtils.readFileToString(new File(path), "utf-8");
-            AnalyzerResult result = analyzer.analyze(source);
+
+            AnalyzerResult result = analyzer.analyze(path);
             Map<String, String> info = new HashMap<>();
             result.issues().forEach(issue -> {
                 info.put("path", path);

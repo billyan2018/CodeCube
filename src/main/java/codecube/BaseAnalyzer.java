@@ -1,6 +1,6 @@
 package codecube;
 
-import codecube.core.Analyzer;
+import codecube.core.Scanner;
 import codecube.core.AnalyzerResult;
 import codecube.core.InputFileExtensions;
 import codecube.core.LanguagePlugin;
@@ -17,10 +17,10 @@ abstract class BaseAnalyzer {
     // base class
     
     private final LanguagePlugin languagePlugin = newLanguagePlugin();
-    private final Analyzer analyzer = new Analyzer(languagePlugin);
+    private final Scanner scanner = new Scanner(languagePlugin);
 
-    public AnalyzerResult analyze(String source) {
-        return analyzer.apply(source);
+    public AnalyzerResult analyze(String source) throws IOException {
+        return scanner.apply(source);
     }
 
     private LanguagePlugin newLanguagePlugin() {
