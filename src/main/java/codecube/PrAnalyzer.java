@@ -1,17 +1,15 @@
 package codecube;
 
-import codecube.utils.GitHubRetriever;
-
 import codecube.core.AnalyzerResult;
 import codecube.domain.PullFile;
-
-import java.io.IOException;
-import java.util.*;
-
+import codecube.utils.GitHubRetriever;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+
+import java.io.IOException;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor

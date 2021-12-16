@@ -1,11 +1,7 @@
 package codecube;
 
 import codecube.core.AnalyzerResult;
-
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,10 +9,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 @Slf4j
@@ -30,7 +23,7 @@ public class FullAnalyzer {
 
 
     private void proceed() throws IOException {
-        List<AnalyzerResult> results = new ArrayList<>();
+        List<Map<String, String>> results = new ArrayList<>();
         for (String path : files) {
             String fileExtension = FilenameUtils.getExtension(path);
             BaseAnalyzer analyzer = ANALYZERS.get(fileExtension);
@@ -40,17 +33,22 @@ public class FullAnalyzer {
 
             String source = FileUtils.readFileToString(new File(path), "utf-8");
             AnalyzerResult result = analyzer.analyze(source);
-            results.add(result);
-
-
+            Map<String, String> info = new HashMap<>();
+            result.issues().forEach(issue -> {
+                info.put("path", path);
+                info.put("severity", issue.getSeverity());
+                info.put("code", issue.getRuleKey());
+                info.put("message", issue.getMessage());
+                info.put("start_line", issue.getStartLine().toString());
+                info.put("end_line", issue.getEndLine().toString());
+                results.add(info);
+            });
         }
         System.out.print(gson.toJson(results));
     }
 
     public static void main(String[] args) throws IOException {
-        List<String> files = //Arrays.asList(args);
-                ImmutableList.of("/Users/biyan/Desktop/CodeCube/src/main/java/codecube/FullAnalyzer.java",
-                        "/Users/biyan/Desktop/CodeCube/src/main/java/codecube/BaseAnalyzer.java");
+        List<String> files = Arrays.asList(args);
         FullAnalyzer analyzer = new FullAnalyzer(files);
         analyzer.proceed();
     }

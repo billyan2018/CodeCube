@@ -1,9 +1,10 @@
 package codecube.domain;
 
+import lombok.Getter;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
-import lombok.Getter;
 
 @Getter
 public class PullFile {

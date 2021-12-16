@@ -1,9 +1,10 @@
 package codecube.core;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class InputFileExtensions {
