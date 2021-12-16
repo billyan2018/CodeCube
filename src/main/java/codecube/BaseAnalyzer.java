@@ -1,9 +1,9 @@
 package codecube;
 
-import codecube.core.Scanner;
 import codecube.core.AnalyzerResult;
 import codecube.core.InputFileExtensions;
 import codecube.core.LanguagePlugin;
+import codecube.core.Scanner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 

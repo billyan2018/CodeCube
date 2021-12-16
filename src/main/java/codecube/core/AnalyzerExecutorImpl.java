@@ -18,7 +18,6 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 
 public class AnalyzerExecutorImpl implements AnalyzerExecutor {
@@ -32,7 +31,7 @@ public class AnalyzerExecutorImpl implements AnalyzerExecutor {
             .build();
     StandaloneSonarLintEngine engine = new StandaloneSonarLintEngineImpl(globalConfig);
 
-    final String code = FileUtils.readFileToString(new File(path), "utf-8");
+    final String code = FileUtils.readFileToString(new File(path), StandardCharsets.UTF_8);
     ClientInputFile clientInputFile = new ClientInputFile() {
       @Override
       public String getPath() {
