@@ -1,37 +1,26 @@
 name: CodeQuality
 
-on: [push]
+on:
+  pull_request:
+    branches:
+      - '**'
 
 jobs:
   codeQuality:
     runs-on: ubuntu-latest
-    steps:  
+    steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0  # Set fetch-depth: 0 to fetch all history for all branches and tags.
     - name: code scan
       run: |
-         pwd && ls -l && \
-         start=`date +%s` \
-         && export SOURCE_CODE="$PWD" \
-         && export REPORT_FORMAT="json" \
-         && /usr/bin/docker run \
-         --volume "$SOURCE_CODE":/code \
-          --volume /tmp/cc:/tmp/cc \
-         registry.gitlab.com/billyan2018/codeclimate-lite analyze -f "$REPORT_FORMAT" > "raw_codeclimate.$REPORT_FORMAT" \
-         && /usr/bin/docker run \
-         registry.gitlab.com/billyan2018/codeclimate-lite html raw_codeclimate.$REPORT_FORMAT > gl-code-quality-report.html \ 
-         && end=`date +%s` && runtime=$((end-start)) && echo $runtime 
-    - name: Only keep issues in changed files
-      run: |
-         /usr/bin/docker run --entrypoint /usr/bin/node \
-         --volume "$PWD":/code \
-         registry.gitlab.com/billyan2018/codeclimate-lite  "/usr/src/app/report-processor/main.js"
-    - name: Archive code quality report
-      uses: actions/upload-artifact@v2
+         mkdir -p /home/linter \
+         && docker run    --rm    \
+         --volume /tmp:/tmp \
+         --volume "$PWD":/home/linter/code registry.gitlab.com/billyan2018/lite-linter:latest  \
+         && cp /tmp/gl-code-quality-report.json .
       with:
         name: code-quality-report
-        path: 'raw_codeclimate.json'
-    - name: Archive changed code quality
-      uses: actions/upload-artifact@v2
-      with:
-        name: code-quality-report-html
-        path: 'gl-code-quality-report.html'
+        path: |
+          gl-code-quality-report.json
+

@@ -12,9 +12,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
 
+//add a comment line
 @Slf4j
 abstract class BaseAnalyzer {
-    // base class
+
     
     private final LanguagePlugin languagePlugin = newLanguagePlugin();
     private final Scanner scanner = new Scanner(languagePlugin);
@@ -25,6 +26,7 @@ abstract class BaseAnalyzer {
 
     private LanguagePlugin newLanguagePlugin() {
         try {
+
             String inputFileExtension = InputFileExtensions.fromLanguageCode(language());
             return new LanguagePlugin(findPluginFile().toUri().toURL(), inputFileExtension);
         } catch (IOException e) {
