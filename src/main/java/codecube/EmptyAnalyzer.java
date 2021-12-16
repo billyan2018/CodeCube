@@ -6,12 +6,9 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-// another line
 @Slf4j
-class JavaAnalyzer extends BaseAnalyzer {
-
-    private static final String  PLUG_IN_FILE= "sonar-java-plugin-4.14.0.11784.jar";
-    @Override
+class EmptyAnalyzer extends BaseAnalyzer {
+  @Override
     String language() {
         return "java";
     }
@@ -24,7 +21,7 @@ class JavaAnalyzer extends BaseAnalyzer {
 
     @Override
     String fileExtension() {
+        String notUsed = "something new";
         return "java";
     }
-
 }
