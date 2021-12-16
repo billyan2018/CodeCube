@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 @Slf4j
 class JavaAnalyzer extends BaseAnalyzer {
 
-    private static final String  PLUG_IN_FILE= "sonar-java-plugin-4.9.0.9858.jar";
+    private static final String  PLUG_IN_FILE= "sonar-java-plugin-4.14.0.11784.jar";
     @Override
     String language() {
         return "java";

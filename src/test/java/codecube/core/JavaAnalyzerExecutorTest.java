@@ -42,6 +42,6 @@ public class JavaAnalyzerExecutorTest extends AbstractAnalyzerExecutorTest {
   @Override
   Path findPluginFile() {
 
-    return Paths.get("sonar-java-plugin-4.9.0.9858.jar");
+    return Paths.get("sonar-java-plugin-4.14.0.11784.jar");
   }
 }

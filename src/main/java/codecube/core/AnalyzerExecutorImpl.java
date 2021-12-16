@@ -128,31 +128,6 @@ public class AnalyzerExecutorImpl implements AnalyzerExecutor {
       analysisErrorsListener,
       logOutput);
 
-    return new AnalyzerResult() {
-      @Override
-      public List<Issue> issues() {
-        return issues;
-      }
-
-      @Override
-      public List<Highlighting> highlightings() {
-        return highlightings;
-      }
-
-      @Override
-      public Map<TextRange, Set<TextRange>> symbolRefs() {
-        return symbolRefs;
-      }
-
-      @Override
-      public List<AnalysisError> errors() {
-        return errors;
-      }
-
-      @Override
-      public boolean success() {
-        return errors.isEmpty();
-      }
-    };
+    return new AnalyzerResultImpl(issues, highlightings, symbolRefs, errors);
   }
 }

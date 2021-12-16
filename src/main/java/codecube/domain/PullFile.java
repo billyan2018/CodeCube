@@ -1,15 +1,11 @@
 package codecube.domain;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 import lombok.Getter;
 
 @Getter
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class PullFile {
 
     private static final Pattern SEPERATOR_COMMA = Pattern.compile(",");
@@ -20,11 +16,11 @@ public class PullFile {
     private final String rawUrl;
     private final String patch;
 
-    @JsonCreator
-    public PullFile(@JsonProperty("sha") final String sha,
-            @JsonProperty("filename") final String filename,
-            @JsonProperty("raw_url") final String rawUrl,
-            @JsonProperty("patch") String patch) {
+
+    public PullFile( final String sha,
+            final String filename,
+            final String rawUrl,
+            String patch) {
         this.sha = sha;
         this.filename = filename;
         this.rawUrl = rawUrl;
