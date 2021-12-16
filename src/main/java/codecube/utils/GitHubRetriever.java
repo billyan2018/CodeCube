@@ -2,10 +2,10 @@ package codecube.utils;
 
 import lombok.RequiredArgsConstructor;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Scanner;
-import javax.net.ssl.HttpsURLConnection;
 
 
 @RequiredArgsConstructor

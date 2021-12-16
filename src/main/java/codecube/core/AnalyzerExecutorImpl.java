@@ -1,5 +1,15 @@
 package codecube.core;
 
+import org.sonar.api.batch.fs.TextRange;
+import org.sonar.api.batch.sensor.error.AnalysisError;
+import org.sonar.api.batch.sensor.highlighting.TypeOfText;
+import org.sonarsource.sonarlint.core.StandaloneSonarLintEngineImpl;
+import org.sonarsource.sonarlint.core.client.api.common.LogOutput;
+import org.sonarsource.sonarlint.core.client.api.common.analysis.*;
+import org.sonarsource.sonarlint.core.client.api.standalone.StandaloneAnalysisConfiguration;
+import org.sonarsource.sonarlint.core.client.api.standalone.StandaloneGlobalConfiguration;
+import org.sonarsource.sonarlint.core.client.api.standalone.StandaloneSonarLintEngine;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,28 +17,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import org.sonar.api.batch.fs.TextRange;
-import org.sonar.api.batch.sensor.error.AnalysisError;
-import org.sonar.api.batch.sensor.highlighting.TypeOfText;
-import org.sonarsource.sonarlint.core.StandaloneSonarLintEngineImpl;
-import org.sonarsource.sonarlint.core.client.api.common.LogOutput;
-import org.sonarsource.sonarlint.core.client.api.common.analysis.AnalysisErrorImpl;
-import org.sonarsource.sonarlint.core.client.api.common.analysis.AnalysisErrorsListener;
-import org.sonarsource.sonarlint.core.client.api.common.analysis.ClientInputFile;
-import org.sonarsource.sonarlint.core.client.api.common.analysis.Highlighting;
-import org.sonarsource.sonarlint.core.client.api.common.analysis.HighlightingListener;
-import org.sonarsource.sonarlint.core.client.api.common.analysis.Issue;
-import org.sonarsource.sonarlint.core.client.api.common.analysis.IssueListener;
-import org.sonarsource.sonarlint.core.client.api.common.analysis.SymbolRefsListener;
-import org.sonarsource.sonarlint.core.client.api.standalone.StandaloneAnalysisConfiguration;
-import org.sonarsource.sonarlint.core.client.api.standalone.StandaloneGlobalConfiguration;
-import org.sonarsource.sonarlint.core.client.api.standalone.StandaloneSonarLintEngine;
+import java.util.*;
 
 public class AnalyzerExecutorImpl implements AnalyzerExecutor {
 
@@ -128,31 +117,6 @@ public class AnalyzerExecutorImpl implements AnalyzerExecutor {
       analysisErrorsListener,
       logOutput);
 
-    return new AnalyzerResult() {
-      @Override
-      public List<Issue> issues() {
-        return issues;
-      }
-
-      @Override
-      public List<Highlighting> highlightings() {
-        return highlightings;
-      }
-
-      @Override
-      public Map<TextRange, Set<TextRange>> symbolRefs() {
-        return symbolRefs;
-      }
-
-      @Override
-      public List<AnalysisError> errors() {
-        return errors;
-      }
-
-      @Override
-      public boolean success() {
-        return errors.isEmpty();
-      }
-    };
+    return new AnalyzerResultImpl(issues, highlightings, symbolRefs, errors);
   }
 }

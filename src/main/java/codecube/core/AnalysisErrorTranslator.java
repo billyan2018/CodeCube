@@ -1,11 +1,12 @@
 package codecube.core;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.sonar.api.batch.fs.TextPointer;
 import org.sonar.api.batch.fs.internal.DefaultTextPointer;
 import org.sonar.api.batch.sensor.error.AnalysisError;
 import org.sonarsource.sonarlint.core.client.api.common.analysis.AnalysisErrorImpl;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * A helper class to translate original AnalysisError objects

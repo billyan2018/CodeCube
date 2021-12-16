@@ -1,8 +1,9 @@
 package codecube.core;
 
-import java.net.URL;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+
+import java.net.URL;
 
 @EqualsAndHashCode
 @ToString

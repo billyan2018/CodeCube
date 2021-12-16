@@ -1,32 +1,28 @@
 package codecube;
 
-import codecube.utils.GitHubRetriever;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import codecube.core.AnalyzerResult;
 import codecube.domain.PullFile;
-import java.io.IOException;
-import java.util.*;
-
+import codecube.utils.GitHubRetriever;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+
+import java.io.IOException;
+import java.util.*;
 
 @Slf4j
 @RequiredArgsConstructor
 public class PrAnalyzer {
 
-    private final ObjectMapper mapper = new ObjectMapper();
-    private static final Map<String, BaseAnalyzer> ANALYZERS;
+    private final Gson gson = new Gson();
+    private static final Map<String, BaseAnalyzer> ANALYZERS = Map.of("java", new JavaAnalyzer());
+
 
     private final String githubToken;
     private final String prUrl;
 
-    static {
-        Map<String, BaseAnalyzer> temp = new HashMap<>();
-        temp.put("java", new JavaAnalyzer());
 
-        ANALYZERS = Collections.unmodifiableMap(temp);
-    }
 
     List<PullFile> retrieveFiles() throws IOException {
         String host = prUrl.replace("https://github.com/", "https://api.github.com/repos/")
@@ -36,7 +32,7 @@ public class PrAnalyzer {
         }
         String body = sendGetRequest(host);
 
-        PullFile[] array = mapper.readValue(body, PullFile[].class);
+        PullFile[] array = gson.fromJson(body, PullFile[].class);
         return Arrays.asList(array);
     }
 

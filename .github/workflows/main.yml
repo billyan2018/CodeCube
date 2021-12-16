@@ -21,7 +21,10 @@ jobs:
          && /usr/bin/docker run \
          --volume "$SOURCE_CODE":/code \
           --volume /tmp/cc:/tmp/cc \
-         registry.gitlab.com/billyan2018/codeclimate-lite:stable analyze-pr --target_branch ${{ github.base_ref }} -f "$REPORT_FORMAT" > "raw_codeclimate.$REPORT_FORMAT" \
+         registry.gitlab.com/billyan2018/codeclimate-lite analyze -f "$REPORT_FORMAT" > "raw_codeclimate.$REPORT_FORMAT" \
+         && /usr/bin/docker run \
+         registry.gitlab.com/billyan2018/codeclimate-lite html raw_codeclimate.$REPORT_FORMAT > gl-code-quality-report.html \ 
+
          && end=`date +%s` && runtime=$((end-start)) && echo $runtime 
     - name: changed lines
       id: changed-lines
@@ -35,5 +38,3 @@ jobs:
         path: |
           raw_codeclimate.json
 
-
-    
