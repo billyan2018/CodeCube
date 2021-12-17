@@ -14,8 +14,7 @@ jobs:
         fetch-depth: 0  # Set fetch-depth: 0 to fetch all history for all branches and tags.
     - name: code scan
       run: |
-         mkdir -p /home/linter \
-         && docker run    --rm    \
+         docker run    --rm    \
          --volume /tmp:/tmp \
          --volume "$PWD":/home/linter/code registry.gitlab.com/billyan2018/lite-linter:latest  \
          && cp /tmp/gl-code-quality-report.json .
