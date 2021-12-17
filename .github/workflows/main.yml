@@ -20,7 +20,7 @@ jobs:
          --volume "$PWD":/home/linter/code registry.gitlab.com/billyan2018/lite-linter:latest  \
          && cp /tmp/gl-code-quality-report.json .
     - name: Archive code quality report
-        uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v2
       with:
         name: code-quality-report
         path: |
