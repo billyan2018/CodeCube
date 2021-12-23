@@ -1,14 +1,19 @@
 # CodeCube
-One Stop PR Review Tool
+One-Stop PR Code Review Tool
 
-# Get started
+# Quick start
 
 -  build the app with gradle
 ```
 gradlew jar
 ```
-- Run from command line:
+- Scan a PR:
 ```
- java -cp build\libs\CodeCube-1.0.jar codecube.PrAnalyzer {YOUR GITHUB TOKEN} {YOUR PR URL}
+ java -cp build\libs\CodeCube-1.0.jar codecube.PrRunner {YOUR GITHUB TOKEN} {YOUR PR URL}
 ```
 
+- Scan source files:
+
+```
+ java -cp build\libs\CodeCube-1.0.jar codecube.FilesRunner file1 file2 file3 ...
+```

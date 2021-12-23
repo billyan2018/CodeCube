@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.List;
 
 //add a comment line
 @Slf4j
@@ -20,8 +21,8 @@ abstract class BaseAnalyzer {
     private final LanguagePlugin languagePlugin = newLanguagePlugin();
     private final Scanner scanner = new Scanner(languagePlugin);
 
-    public AnalyzerResult analyze(String source) throws IOException {
-        return scanner.apply(source);
+    public AnalyzerResult analyze(String base, List<String> sourceFiles) {
+        return scanner.apply(base, sourceFiles);
     }
 
     private LanguagePlugin newLanguagePlugin() {
@@ -39,9 +40,6 @@ abstract class BaseAnalyzer {
     abstract String language();
 
     abstract Path findPluginFile();
-
-    abstract String fileExtension();
-
     void ensurePlugin(String pluginFile) {
         File dest = new File(pluginFile);
         if (dest.isFile()) {

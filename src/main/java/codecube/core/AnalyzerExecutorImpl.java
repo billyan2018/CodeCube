@@ -17,52 +17,36 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AnalyzerExecutorImpl implements AnalyzerExecutor {
 
 
 
   @Override
-  public AnalyzerResult execute(LanguagePlugin languagePlugin, String path) throws IOException {
-    StandaloneGlobalConfiguration globalConfig = StandaloneGlobalConfiguration.builder()
+  public AnalyzerResult execute(File baseDir,
+                                LanguagePlugin languagePlugin,
+                                List<String> paths) {
+    StandaloneGlobalConfiguration globalConfig =
+            StandaloneGlobalConfiguration.builder()
             .addPlugin(languagePlugin.getUrl())
             .build();
     StandaloneSonarLintEngine engine = new StandaloneSonarLintEngineImpl(globalConfig);
 
-    final String code = FileUtils.readFileToString(new File(path), StandardCharsets.UTF_8);
-    ClientInputFile clientInputFile = new ClientInputFile() {
-      @Override
-      public String getPath() {
-        return path;
-      }
-
-      @Override
-      public boolean isTest() {
-        return false;
-      }
-
-      @Override
-      public Charset getCharset() {
-        return StandardCharsets.UTF_8;
-      }
-
-      @Override
-      public InputStream inputStream() {
-        return new ByteArrayInputStream(code.getBytes(StandardCharsets.UTF_8));
-      }
-
-      @Override
-      public String contents() {
-        return code;
-      }
-    };
-
-    Iterable<ClientInputFile> inputFiles = Collections.singleton(clientInputFile);
-
+    List<ClientInputFile> inputFiles = paths
+            .stream()
+            .map(AnalyzerExecutorImpl:: buildInputFile)
+            .collect(Collectors.toList());
     Map<String, String> extraProperties = new HashMap<>();
-    StandaloneAnalysisConfiguration config = new StandaloneAnalysisConfiguration(Files.createTempDirectory("sonarlint-"), inputFiles, extraProperties);
+    extraProperties.put("sonar.java.binaries", "**/classes");
+
+
+
+    StandaloneAnalysisConfiguration config = new StandaloneAnalysisConfiguration(
+            baseDir.toPath(),
+            inputFiles,
+            extraProperties);
 
     List<Issue> issues = new ArrayList<>();
     IssueListener issueListener = issues::add;
@@ -98,5 +82,42 @@ public class AnalyzerExecutorImpl implements AnalyzerExecutor {
       logOutput);
 
     return new AnalyzerResultImpl(issues, highlightings, symbolRefs, errors);
+  }
+  private static String loadFile(String path) {
+    try {
+      return FileUtils.readFileToString(new File(path), StandardCharsets.UTF_8);
+    } catch (IOException ex) {
+      return "";
+    }
+  }
+  private static ClientInputFile buildInputFile(String path) {
+    final String code = loadFile(path);
+
+    return new ClientInputFile() {
+      @Override
+      public String getPath() {
+        return path;
+      }
+
+      @Override
+      public boolean isTest() {
+        return path.contains("/test/");
+      }
+
+      @Override
+      public Charset getCharset() {
+        return StandardCharsets.UTF_8;
+      }
+
+      @Override
+      public InputStream inputStream() {
+        return new ByteArrayInputStream(code.getBytes(StandardCharsets.UTF_8));
+      }
+
+      @Override
+      public String contents() {
+        return code;
+      }
+    };
   }
 }

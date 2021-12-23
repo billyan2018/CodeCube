@@ -19,7 +19,9 @@
  */
 package codecube.core;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public class Scanner {
 
@@ -30,11 +32,8 @@ public class Scanner {
     this.languagePlugin = languagePlugin;
   }
 
-  public AnalyzerResult apply(String path) throws IOException {
-    return executor.execute(languagePlugin, path);
+  public AnalyzerResult apply(String base, List<String> paths) {
+    return executor.execute(new File(base), languagePlugin, paths);
   }
 
-  public String fileExtension() {
-    return languagePlugin.getInputFileExtension();
-  }
 }

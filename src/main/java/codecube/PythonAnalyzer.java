@@ -8,12 +8,12 @@ import java.nio.file.Paths;
 
 // another line
 @Slf4j
-class JavaAnalyzer extends BaseAnalyzer {
+class PythonAnalyzer extends BaseAnalyzer {
 
-    private static final String  PLUG_IN_FILE= "sonar-java-plugin-4.14.0.11784.jar";
+    private static final String  PLUG_IN_FILE= "sonar-python-plugin-1.8.0.1496.jar";
     @Override
     String language() {
-        return "java";
+        return "python";
     }
 
     @Override
