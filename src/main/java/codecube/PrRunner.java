@@ -1,5 +1,6 @@
 package codecube;
 
+import codecube.core.AnalyzerResult;
 import codecube.domain.PullFile;
 import codecube.utils.GitHubRetriever;
 import com.google.common.collect.ImmutableMap;
@@ -7,9 +8,12 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
+import org.sonarsource.sonarlint.core.client.api.common.analysis.Issue;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -45,41 +49,53 @@ public class PrRunner {
     }
 
     private void proceed() throws IOException {
-        /*List<PullFile> files = retrieveFiles();
-        for (PullFile file : files) {
-            System.out.println("======" + file.getFilename());
-            String fileExtension = FilenameUtils.getExtension(file.getFilename());
-            BaseAnalyzer analyzer = ANALYZERS.get(fileExtension);
-            if (null == analyzer) {
-                continue;
+        List<PullFile> files = retrieveFiles();
+        for (String lang: ANALYZERS.keySet()) {
+
+            List<PullFile> filesWithLanguage = files.stream().filter(file ->
+                    lang.equals(FilenameUtils.getExtension(file.getFilename())))
+                    .collect(Collectors.toList());
+            if (!filesWithLanguage.isEmpty()) {
+                BaseAnalyzer analyzer = ANALYZERS.get(lang);
+                List<String> filePaths = filesWithLanguage
+                        .stream()
+                        .map(file -> file.getFilename())
+                        .collect(Collectors.toList());
+                AnalyzerResult result = analyzer.analyze("/tmp/", filePaths);
+                for (PullFile file: filesWithLanguage) {
+                    List<Issue> issues = result
+                            .issues()
+                            .stream()
+                            .filter(item -> item.getInputFile().getPath().equals(file.getFilename()))
+                            .collect(Collectors.toList());
+
+                    Set<Integer> changedLines = file.changedLines();
+
+                    if (!issues.isEmpty()) {
+                        System.out.println("======" + file.getFilename() + ":" + issues.size());
+                        issues.forEach(
+                                issue -> {
+                                    boolean inScope = isInChange(changedLines, issue.getStartLine(), issue.getEndLine());
+
+                                    String symbol = inScope ? "Y" : "N";
+                                    if (!"Package declaration should match source file directory".equals(issue.getRuleName())) {
+                                        System.out.println(symbol
+                                                + "[" + issue.getStartLine()
+                                                + "~" + issue.getEndLine() + "]:"
+                                                + issue.getSeverity() + ":"
+                                                + issue.getType() + ":"
+                                                + issue.getRuleName());
+
+                                    }
+
+                                });
+                    }
+                }
+
+
             }
+        }
 
-            String source = preparePullRequestFile(file);
-            AnalyzerResult result = analyzer.analyze(source);
-            Set<Integer> changedLines = file.changedLines();
-            System.out.println("======" + file.getFilename() + ":" + result.issues().size());
-            result.issues().forEach(
-                   issue -> {
-                       boolean inScope = isInChange(changedLines, issue.getStartLine(), issue.getEndLine());
-
-                       String symbol = inScope ? "Y" : "N";
-                       if (!"Package declaration should match source file directory".equals(issue.getRuleName())) {
-                           System.out.println(symbol
-                                   + "[" + issue.getStartLine()
-                                   + "~" + issue.getEndLine() + "]:"
-                                   + issue.getSeverity() + ":"
-                                   + issue.getType() + ":"
-                                   + issue.getRuleName());
-
-                       }
-
-                   }
-            );
-            result.errors().forEach(analysisError ->
-                    System.err.println("" + analysisError.location() + ":" + analysisError.message())
-
-            );
-        }*/
     }
 
     private static boolean isInChange(Collection<Integer> changedLines, int start, int end) {

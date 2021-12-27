@@ -26,8 +26,8 @@ public class FilesRunner {
             "py", new PythonAnalyzer()
     );
 
-    private void proceed(String baseDir, FileWriter writer) {
-        boolean started = false;
+    private void proceed(String baseDir) {
+
         for (String lang: ANALYZERS.keySet()) {
 
             List<String> filesWithLanguage = files.stream().filter(file ->
@@ -44,18 +44,8 @@ public class FilesRunner {
                     }
 
                     String json = buildJson(path, issue);
-
-                    try {
-                        if (started) {
-                            writer.write(",");
-                        }
-                        writer.write(json);
-                    } catch (IOException ex) {
-                        log.error("error during analysis", ex);
-                    }
-                    started = true;
+                    System.out.print(json + '\0');
                 }
-
             }
         }
     }
@@ -82,7 +72,11 @@ public class FilesRunner {
 
     private static String buildJson(String path, Issue issue) {
         String docUrl = generateDocUrl(issue.getRuleKey());
-        String desc = docUrl + " " + issue.getMessage().replaceAll("\"",",");
+        String desc = docUrl
+                + " "
+                + issue.getMessage()
+                .replaceAll("\"","'")
+                .replaceAll("\\\\","\\\\\\\\");
         String fingerPrint = generateFingerPrint(path, ""+ issue.getStartLine(), issue.getRuleKey());
         return String.format("{ \"type\":\"issue\",\"engine_name\": \"sonarlint\","
                    + "\"severity\":\"%s\",\"check_name\":\"%s\","
@@ -114,11 +108,6 @@ public class FilesRunner {
             files.add(scanner.nextLine());
         }
         FilesRunner analyzer = new FilesRunner(files);
-        File tmpFile = new File("/tmp/sonar.json");
-        try (FileWriter writer = new FileWriter(tmpFile)) {
-            writer.write("[");
-            analyzer.proceed(args[0], writer);
-            writer.write("]");
-        }
+        analyzer.proceed(args[0]);
     }
 }
