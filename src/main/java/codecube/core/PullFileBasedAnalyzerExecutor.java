@@ -1,6 +1,10 @@
 package codecube.core;
 
-import org.apache.commons.io.FileUtils;
+
+import codecube.domain.PullFileContent;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.sonar.api.batch.fs.TextRange;
 import org.sonar.api.batch.sensor.error.AnalysisError;
 import org.sonar.api.batch.sensor.highlighting.TypeOfText;
@@ -12,31 +16,31 @@ import org.sonarsource.sonarlint.core.client.api.standalone.StandaloneGlobalConf
 import org.sonarsource.sonarlint.core.client.api.standalone.StandaloneSonarLintEngine;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
+
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class AnalyzerExecutorImpl implements AnalyzerExecutor {
+@Slf4j
+@RequiredArgsConstructor
+public class PullFileBasedAnalyzerExecutor {
 
+  private final LanguagePlugin languagePlugin;
+  private final List<PullFileContent> files;
 
-
-  @Override
-  public AnalyzerResult execute(File baseDir,
-                                LanguagePlugin languagePlugin,
-                                List<String> paths) {
+  public AnalyzerResult execute() {
     StandaloneGlobalConfiguration globalConfig =
             StandaloneGlobalConfiguration.builder()
             .addPlugin(languagePlugin.getUrl())
             .build();
     StandaloneSonarLintEngine engine = new StandaloneSonarLintEngineImpl(globalConfig);
 
-    List<ClientInputFile> inputFiles = paths
+    List<ClientInputFile> inputFiles = files
             .stream()
-            .map(AnalyzerExecutorImpl:: buildInputFile)
+            .map(PullFileBasedAnalyzerExecutor:: buildInputFile)
             .collect(Collectors.toList());
     Map<String, String> extraProperties = new HashMap<>();
     extraProperties.put("sonar.java.binaries", "**/classes");
@@ -44,7 +48,7 @@ public class AnalyzerExecutorImpl implements AnalyzerExecutor {
 
 
     StandaloneAnalysisConfiguration config = new StandaloneAnalysisConfiguration(
-            baseDir.toPath(),
+            FileSystems.getDefault().getPath("/tmp"),
             inputFiles,
             extraProperties);
 
@@ -83,25 +87,21 @@ public class AnalyzerExecutorImpl implements AnalyzerExecutor {
 
     return new AnalyzerResultImpl(issues, highlightings, symbolRefs, errors);
   }
-  private static String loadFile(String path) {
-    try {
-      return FileUtils.readFileToString(new File(path), StandardCharsets.UTF_8);
-    } catch (IOException ex) {
-      return "";
-    }
-  }
-  private static ClientInputFile buildInputFile(String path) {
-    final String code = loadFile(path);
+
+
+
+  private static ClientInputFile buildInputFile(PullFileContent file) {
+
 
     return new ClientInputFile() {
       @Override
       public String getPath() {
-        return path;
+        return file.getFilename();
       }
 
       @Override
       public boolean isTest() {
-        return path.contains("/test/");
+        return file.getFilename().contains("/test/");
       }
 
       @Override
@@ -111,12 +111,12 @@ public class AnalyzerExecutorImpl implements AnalyzerExecutor {
 
       @Override
       public InputStream inputStream() {
-        return new ByteArrayInputStream(code.getBytes(StandardCharsets.UTF_8));
+        return new ByteArrayInputStream(file.getContent().getBytes(StandardCharsets.UTF_8));
       }
 
       @Override
       public String contents() {
-        return code;
+        return file.getContent();
       }
     };
   }

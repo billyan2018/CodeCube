@@ -1,6 +1,7 @@
 package codecube;
 
 import codecube.core.AnalyzerResult;
+import codecube.core.FileBasedAnalyzerExecutor;
 import com.google.common.collect.ImmutableMap;
 
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,10 @@ public class FilesRunner {
                     lang.equals(FilenameUtils.getExtension(file))).collect(Collectors.toList());
             if (!filesWithLanguage.isEmpty()) {
                 BaseAnalyzer analyzer = ANALYZERS.get(lang);
-                AnalyzerResult result = analyzer.analyze(baseDir, filesWithLanguage);
+                FileBasedAnalyzerExecutor executor = new FileBasedAnalyzerExecutor(new File(baseDir),
+                        analyzer.getLanguagePlugin(),
+                        filesWithLanguage);
+                AnalyzerResult result = executor.execute();
 
                 for (Issue issue : result.issues()) {
 
@@ -44,7 +48,7 @@ public class FilesRunner {
                     }
 
                     String json = buildJson(path, issue);
-                    System.out.print(json + '\0');
+                    System.out.print(json + '\uffff');
                 }
             }
         }

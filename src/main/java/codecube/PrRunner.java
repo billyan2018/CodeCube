@@ -1,7 +1,11 @@
 package codecube;
 
 import codecube.core.AnalyzerResult;
+import codecube.core.InputFileExtensions;
+import codecube.core.LanguagePlugin;
+import codecube.core.PullFileBasedAnalyzerExecutor;
 import codecube.domain.PullFile;
+import codecube.domain.PullFileContent;
 import codecube.utils.GitHubRetriever;
 import com.google.common.collect.ImmutableMap;
 
@@ -20,7 +24,10 @@ import java.util.stream.Collectors;
 public class PrRunner {
 
     private final Gson gson = new Gson();
-    private static final Map<String, BaseAnalyzer> ANALYZERS = ImmutableMap.of("java", new JavaAnalyzer());
+    private static final Map<String, BaseAnalyzer> ANALYZERS = ImmutableMap.of(
+            "java", new JavaAnalyzer(),
+            "py", new PythonAnalyzer()
+    );
 
 
     private final String githubToken;
@@ -40,15 +47,22 @@ public class PrRunner {
         return Arrays.asList(array);
     }
 
-    String preparePullRequestFile(PullFile file) throws IOException {
 
-        String rawUrl = file.getRawUrl()
-                .replace("github.com", "raw.githubusercontent.com")
-                .replace("/raw/", "/");
-        return sendGetRequest(rawUrl);
+    String preparePullRequestFile(PullFile file)  {
+        try {
+            String rawUrl = file.getRawUrl()
+                    .replace("github.com", "raw.githubusercontent.com")
+                    .replace("/raw/", "/");
+            return sendGetRequest(rawUrl);
+        } catch (IOException ex) {
+            log.warn("", ex);
+            return "";
+        }
     }
 
+
     private void proceed() throws IOException {
+
         List<PullFile> files = retrieveFiles();
         for (String lang: ANALYZERS.keySet()) {
 
@@ -57,11 +71,18 @@ public class PrRunner {
                     .collect(Collectors.toList());
             if (!filesWithLanguage.isEmpty()) {
                 BaseAnalyzer analyzer = ANALYZERS.get(lang);
-                List<String> filePaths = filesWithLanguage
+                LanguagePlugin plugin = analyzer.getLanguagePlugin();
+                List<PullFileContent> contents = filesWithLanguage
                         .stream()
-                        .map(file -> file.getFilename())
+                        .map(file-> {
+                            String content = preparePullRequestFile(file);
+                            return new PullFileContent(file.getFilename(), content);
+                        })
                         .collect(Collectors.toList());
-                AnalyzerResult result = analyzer.analyze("/tmp/", filePaths);
+                PullFileBasedAnalyzerExecutor executor =
+                        new PullFileBasedAnalyzerExecutor(plugin, contents);
+
+                AnalyzerResult result = executor.execute();
                 for (PullFile file: filesWithLanguage) {
                     List<Issue> issues = result
                             .issues()
