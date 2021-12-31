@@ -1,6 +1,10 @@
 package codecube.core;
 
-import org.apache.commons.io.FileUtils;
+
+import codecube.domain.PullFileContent;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.sonar.api.batch.fs.TextRange;
 import org.sonar.api.batch.sensor.error.AnalysisError;
 import org.sonar.api.batch.sensor.highlighting.TypeOfText;
@@ -12,57 +16,41 @@ import org.sonarsource.sonarlint.core.client.api.standalone.StandaloneGlobalConf
 import org.sonarsource.sonarlint.core.client.api.standalone.StandaloneSonarLintEngine;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
+
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
+import java.nio.file.FileSystems;
 import java.util.*;
+import java.util.stream.Collectors;
 
-public class AnalyzerExecutorImpl implements AnalyzerExecutor {
+@Slf4j
+@RequiredArgsConstructor
+public class PullFileBasedAnalyzerExecutor {
 
+  private final LanguagePlugin languagePlugin;
+  private final List<PullFileContent> files;
 
-
-  @Override
-  public AnalyzerResult execute(LanguagePlugin languagePlugin, String path) throws IOException {
-    StandaloneGlobalConfiguration globalConfig = StandaloneGlobalConfiguration.builder()
+  public AnalyzerResult execute() {
+    StandaloneGlobalConfiguration globalConfig =
+            StandaloneGlobalConfiguration.builder()
             .addPlugin(languagePlugin.getUrl())
             .build();
     StandaloneSonarLintEngine engine = new StandaloneSonarLintEngineImpl(globalConfig);
 
-    final String code = FileUtils.readFileToString(new File(path), StandardCharsets.UTF_8);
-    ClientInputFile clientInputFile = new ClientInputFile() {
-      @Override
-      public String getPath() {
-        return path;
-      }
-
-      @Override
-      public boolean isTest() {
-        return false;
-      }
-
-      @Override
-      public Charset getCharset() {
-        return StandardCharsets.UTF_8;
-      }
-
-      @Override
-      public InputStream inputStream() {
-        return new ByteArrayInputStream(code.getBytes(StandardCharsets.UTF_8));
-      }
-
-      @Override
-      public String contents() {
-        return code;
-      }
-    };
-
-    Iterable<ClientInputFile> inputFiles = Collections.singleton(clientInputFile);
-
+    List<ClientInputFile> inputFiles = files
+            .stream()
+            .map(PullFileBasedAnalyzerExecutor:: buildInputFile)
+            .collect(Collectors.toList());
     Map<String, String> extraProperties = new HashMap<>();
-    StandaloneAnalysisConfiguration config = new StandaloneAnalysisConfiguration(Files.createTempDirectory("sonarlint-"), inputFiles, extraProperties);
+    extraProperties.put("sonar.java.binaries", "**/classes");
+
+
+
+    StandaloneAnalysisConfiguration config = new StandaloneAnalysisConfiguration(
+            FileSystems.getDefault().getPath("/tmp"),
+            inputFiles,
+            extraProperties);
 
     List<Issue> issues = new ArrayList<>();
     IssueListener issueListener = issues::add;
@@ -98,5 +86,38 @@ public class AnalyzerExecutorImpl implements AnalyzerExecutor {
       logOutput);
 
     return new AnalyzerResultImpl(issues, highlightings, symbolRefs, errors);
+  }
+
+
+
+  private static ClientInputFile buildInputFile(PullFileContent file) {
+
+
+    return new ClientInputFile() {
+      @Override
+      public String getPath() {
+        return file.getFilename();
+      }
+
+      @Override
+      public boolean isTest() {
+        return file.getFilename().contains("/test/");
+      }
+
+      @Override
+      public Charset getCharset() {
+        return StandardCharsets.UTF_8;
+      }
+
+      @Override
+      public InputStream inputStream() {
+        return new ByteArrayInputStream(file.getContent().getBytes(StandardCharsets.UTF_8));
+      }
+
+      @Override
+      public String contents() {
+        return file.getContent();
+      }
+    };
   }
 }

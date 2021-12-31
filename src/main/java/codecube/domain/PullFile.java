@@ -1,32 +1,26 @@
 package codecube.domain;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 @Getter
+@RequiredArgsConstructor
 public class PullFile {
 
-    private static final Pattern SEPERATOR_COMMA = Pattern.compile(",");
-    private static final Pattern SEPERATOR_SPACE = Pattern.compile(" ");
+    private static final Pattern SEPARATOR_COMMA = Pattern.compile(",");
+    private static final Pattern SEPARATOR_SPACE = Pattern.compile(" ");
 
     private final String sha;
     private final String filename;
+
+    @SerializedName("raw_url")
     private final String rawUrl;
     private final String patch;
-
-
-    public PullFile( final String sha,
-            final String filename,
-            final String rawUrl,
-            String patch) {
-        this.sha = sha;
-        this.filename = filename;
-        this.rawUrl = rawUrl;
-        this.patch = patch;
-    }
 
     public Set<Integer> changedLines() {
         String[] lines = patch.split("\n");
@@ -36,12 +30,12 @@ public class PullFile {
 
             if (line.startsWith("@@")) {
                 String trimmed = line.replaceAll("@", "").trim();
-                String[] parts = SEPERATOR_SPACE.split(trimmed);
+                String[] parts = SEPARATOR_SPACE.split(trimmed);
                 if (parts.length < 2) {
                     continue;
                 }
                 String lastPart = parts[1];
-                String[] numbers = SEPERATOR_COMMA.split(lastPart);
+                String[] numbers = SEPARATOR_COMMA.split(lastPart);
 
                 start = Integer.parseInt(numbers[0].substring(1)) ;
                 continue;

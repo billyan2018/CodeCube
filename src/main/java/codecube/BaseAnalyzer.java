@@ -3,7 +3,7 @@ package codecube;
 import codecube.core.AnalyzerResult;
 import codecube.core.InputFileExtensions;
 import codecube.core.LanguagePlugin;
-import codecube.core.Scanner;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 
@@ -11,18 +11,14 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.List;
 
 //add a comment line
 @Slf4j
 abstract class BaseAnalyzer {
 
-    
+    @Getter
     private final LanguagePlugin languagePlugin = newLanguagePlugin();
-    private final Scanner scanner = new Scanner(languagePlugin);
-
-    public AnalyzerResult analyze(String source) throws IOException {
-        return scanner.apply(source);
-    }
 
     private LanguagePlugin newLanguagePlugin() {
         try {
@@ -39,15 +35,12 @@ abstract class BaseAnalyzer {
     abstract String language();
 
     abstract Path findPluginFile();
-
-    abstract String fileExtension();
-
     void ensurePlugin(String pluginFile) {
         File dest = new File(pluginFile);
         if (dest.isFile()) {
             return;
         }
-        URL inputUrl = JavaAnalyzer.class.getClassLoader().getResource(pluginFile);
+        URL inputUrl = BaseAnalyzer.class.getClassLoader().getResource(pluginFile);
         try {
             FileUtils.copyURLToFile(inputUrl, dest);
         } catch (IOException ex) {
