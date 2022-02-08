@@ -1,5 +1,7 @@
 package codecube.core;
 
+import org.sonarsource.sonarlint.core.client.api.common.analysis.IssueListener;
+
 public interface AnalyzerExecutor {
-  AnalyzerResult execute();
+  void execute(IssueListener listener);
 }
