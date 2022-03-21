@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -23,6 +24,9 @@ public class PullFile {
     private final String patch;
 
     public Set<Integer> changedLines() {
+        if (patch == null) {
+            return Collections.emptySet();
+        }
         String[] lines = patch.split("\n");
         Set<Integer> changedLines = new HashSet<>();
         int start = 0;

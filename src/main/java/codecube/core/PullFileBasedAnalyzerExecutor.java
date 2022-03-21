@@ -26,12 +26,12 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
-public class PullFileBasedAnalyzerExecutor {
+public class PullFileBasedAnalyzerExecutor implements AnalyzerExecutor {
 
   private final LanguagePlugin languagePlugin;
   private final List<PullFileContent> files;
 
-  public AnalyzerResult execute() {
+  public void execute(IssueListener issueListener) {
     StandaloneGlobalConfiguration globalConfig =
             StandaloneGlobalConfiguration.builder()
             .addPlugin(languagePlugin.getUrl())
@@ -52,8 +52,7 @@ public class PullFileBasedAnalyzerExecutor {
             inputFiles,
             extraProperties);
 
-    List<Issue> issues = new ArrayList<>();
-    IssueListener issueListener = issues::add;
+
 
     LogOutput logOutput = (formattedMessage, level) -> {
     };
@@ -78,14 +77,13 @@ public class PullFileBasedAnalyzerExecutor {
     AnalysisErrorsListener analysisErrorsListener = (message, location) -> errors.add(new AnalysisErrorImpl(message, location));
 
     engine.analyze(
-      config,
-      issueListener,
-      highlightingListener,
-      symbolRefsListener,
-      analysisErrorsListener,
-      logOutput);
+            config,
+            issueListener,
+            highlightingListener,
+            symbolRefsListener,
+            analysisErrorsListener,
+            logOutput);
 
-    return new AnalyzerResultImpl(issues, highlightings, symbolRefs, errors);
   }
 
 

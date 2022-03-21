@@ -4,8 +4,6 @@ on:
   pull_request:
     branches:
       - '**'
-
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,7 +22,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: Package
-          path: build/libs
+          path: build/libs/*.jar
   
   codeQuality:
     runs-on: ubuntu-latest

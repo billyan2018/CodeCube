@@ -26,6 +26,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.10'
     extraLibs group: 'net.java.dev.jna', name: 'jna-platform', version: '4.2.2'
 
+    implementation 'org.apache.commons:commons-text:1.9'
 
     implementation 'com.google.code.gson:gson:2.8.9'
 

@@ -34,7 +34,7 @@ import static org.sonarsource.sonarlint.core.analyzer.sensor.ScannerExtensionDic
  */
 public class NewSensorsExecutor implements SensorsExecutor {
 
-  private static final Logger LOG = LoggerFactory.getLogger(NewSensorsExecutor.class);
+  private static final Logger logger = LoggerFactory.getLogger(NewSensorsExecutor.class);
 
   private final SensorOptimizer sensorOptimizer;
   private final Sensor[] sensors;
@@ -51,8 +51,8 @@ public class NewSensorsExecutor implements SensorsExecutor {
   }
 
   private static void executeSensor(SensorContext context, Sensor sensor, DefaultSensorDescriptor descriptor) {
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Execute Sensor: {}", descriptor.name() != null ? descriptor.name() : StringUtils.describe(sensor));
+    if (logger.isDebugEnabled()) {
+      logger.debug("Execute Sensor: {}", descriptor.name() != null ? descriptor.name() : StringUtils.describe(sensor));
     }
     sensor.execute(context);
   }

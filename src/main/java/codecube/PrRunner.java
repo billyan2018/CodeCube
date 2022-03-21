@@ -1,7 +1,5 @@
 package codecube;
 
-import codecube.core.AnalyzerResult;
-import codecube.core.InputFileExtensions;
 import codecube.core.LanguagePlugin;
 import codecube.core.PullFileBasedAnalyzerExecutor;
 import codecube.domain.PullFile;
@@ -81,11 +79,12 @@ public class PrRunner {
                         .collect(Collectors.toList());
                 PullFileBasedAnalyzerExecutor executor =
                         new PullFileBasedAnalyzerExecutor(plugin, contents);
-
-                AnalyzerResult result = executor.execute();
+                List<Issue> allIssues = new ArrayList<>();
+                executor.execute(issue -> {
+                    allIssues.add(issue);
+                });
                 for (PullFile file: filesWithLanguage) {
-                    List<Issue> issues = result
-                            .issues()
+                    List<Issue> issues = allIssues
                             .stream()
                             .filter(item -> item.getInputFile().getPath().equals(file.getFilename()))
                             .collect(Collectors.toList());

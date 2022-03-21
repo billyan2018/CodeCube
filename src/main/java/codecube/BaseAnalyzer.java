@@ -1,6 +1,5 @@
 package codecube;
 
-import codecube.core.AnalyzerResult;
 import codecube.core.InputFileExtensions;
 import codecube.core.LanguagePlugin;
 import lombok.Getter;
@@ -11,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
-import java.util.List;
 
 //add a comment line
 @Slf4j

@@ -1,21 +1,24 @@
 package codecube;
 
-import codecube.core.AnalyzerResult;
+import codecube.core.BufferedInputFile;
+import codecube.core.CodeBlock;
 import codecube.core.FileBasedAnalyzerExecutor;
 import com.google.common.collect.ImmutableMap;
 
+import com.google.common.collect.Sets;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.sonar.api.internal.apachecommons.codec.digest.DigestUtils;
 import org.sonarsource.sonarlint.core.client.api.common.analysis.Issue;
 
-
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,27 +32,25 @@ public class FilesRunner {
 
     private void proceed(String baseDir) {
 
-        for (String lang: ANALYZERS.keySet()) {
-
+        for (Map.Entry<String, BaseAnalyzer> entry: ANALYZERS.entrySet()) {
+            String lang = entry.getKey();
             List<String> filesWithLanguage = files.stream().filter(file ->
                     lang.equals(FilenameUtils.getExtension(file))).collect(Collectors.toList());
             if (!filesWithLanguage.isEmpty()) {
-                BaseAnalyzer analyzer = ANALYZERS.get(lang);
+                BaseAnalyzer analyzer = entry.getValue();
                 FileBasedAnalyzerExecutor executor = new FileBasedAnalyzerExecutor(new File(baseDir),
                         analyzer.getLanguagePlugin(),
                         filesWithLanguage);
-                AnalyzerResult result = executor.execute();
-
-                for (Issue issue : result.issues()) {
-
+                //AnalyzerResult result = executor.execute();
+                executor.execute(issue -> {
                     String path = issue.getInputFile().getPath();
                     if (path.startsWith(baseDir)) {
                         path = path.substring(baseDir.length() + 1);
                     }
 
-                    String json = buildJson(path, issue);
+                    String json = buildJson(path, issue, lang);
                     System.out.print(json + '\uffff');
-                }
+                });
             }
         }
     }
@@ -69,32 +70,49 @@ public class FilesRunner {
         return docUrl;
     }
 
-    private static String generateFingerPrint(String path, String startLine, String code) {
-        String content = path + startLine + code;
-        return DigestUtils.md5Hex(content).toUpperCase(Locale.ROOT);
+    private static String generateFingerPrint(String path, String ruleCode,String code ) {
+        String content = path + ruleCode + code;
+        return DigestUtils.sha256Hex(content).toUpperCase(Locale.ROOT);
     }
 
-    private static String buildJson(String path, Issue issue) {
+    private static String safeMessage(String message) {
+        int[] jsonSpecialChars = {'\n', '\r', '\"', '\\', '\b', '\f', '\t'};
+        boolean containsAny = Arrays.stream(jsonSpecialChars).anyMatch(ch -> message.indexOf(ch) > -1);
+        if (containsAny) {
+            return StringEscapeUtils.escapeJson(message);
+        } else {
+            return message;
+        }
+    }
+
+    private static String buildJson(String path, Issue issue, String lang) {
         String docUrl = generateDocUrl(issue.getRuleKey());
-        String desc = docUrl
-                + " "
-                + issue.getMessage()
-                .replaceAll("\"","'")
-                .replaceAll("\\\\","\\\\\\\\");
-        String fingerPrint = generateFingerPrint(path, ""+ issue.getStartLine(), issue.getRuleKey());
-        return String.format("{ \"type\":\"issue\",\"engine_name\": \"sonarlint\","
-                   + "\"severity\":\"%s\",\"check_name\":\"%s\","
-                        + "\"description\":\"%s\","
-                        + "\"fingerprint\":\"%s\",\"location\":{\"path\":\"%s\"," +
-                        "                \"lines\":{\n" +
-                        "                    \"begin\":%d,\n" +
-                        "                    \"end\":%d\n" +
-                        "                }}}"
-                    ,
+        String desc = safeMessage(issue.getMessage());
+        BufferedInputFile inputFile = (BufferedInputFile)issue.getInputFile();
+        int begin = issue.getStartLine() == null ? 1 : issue.getStartLine();
+        CodeBlock codeBlock = new CodeBlock(inputFile, begin);
+        String code = codeBlock.getHighlightedLine();
+
+        String fingerPrint = generateFingerPrint(path, issue.getRuleKey(), code);
+        return String.format("{ \"type\":\"issue\",\"engine_name\": \"sonar-%s\","
+                + "\"engine_link\": \"https://www.sonarlint.org\","
+                + "\"severity\":\"%s\",\"check_name\":\"%s\","
+                + "\"check_link\":\"%s\","
+                + "\"description\":\"%s\","
+                + "\"fingerprint\":\"%s\","
+                + "\"code\":%s,"
+                + "\"location\":{\"path\":\"%s\","
+                + "                \"lines\":{\n"
+                + "                    \"begin\":%d,\n"
+                + "                    \"end\":%d\n"
+                + "                }}}",
+                lang,
                 issue.getSeverity().toLowerCase(),
                 issue.getRuleKey(),
+                docUrl,
                 desc,
                 fingerPrint,
+                codeBlock.toJson(),
                 path,
                 issue.getStartLine(),
                 issue.getEndLine()
@@ -106,10 +124,10 @@ public class FilesRunner {
         List<String> files = new ArrayList<>();
 
         File listFile = new File("/tmp/sonar.txt");
-        Scanner scanner = new Scanner(listFile);
-
-        while (scanner.hasNextLine()) {
-            files.add(scanner.nextLine());
+        try (Scanner scanner = new Scanner(listFile)) {
+            while (scanner.hasNextLine()) {
+                files.add(scanner.nextLine());
+            }
         }
         FilesRunner analyzer = new FilesRunner(files);
         analyzer.proceed(args[0]);
