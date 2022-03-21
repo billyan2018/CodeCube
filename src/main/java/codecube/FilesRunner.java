@@ -5,6 +5,7 @@ import codecube.core.CodeBlock;
 import codecube.core.FileBasedAnalyzerExecutor;
 import com.google.common.collect.ImmutableMap;
 
+import com.google.common.collect.Sets;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -73,11 +75,19 @@ public class FilesRunner {
         return DigestUtils.sha256Hex(content).toUpperCase(Locale.ROOT);
     }
 
-
+    private static String safeMessage(String message) {
+        int[] jsonSpecialChars = {'\n', '\r', '\"', '\\', '\b', '\f', '\t'};
+        boolean containsAny = Arrays.stream(jsonSpecialChars).anyMatch(ch -> message.indexOf(ch) > -1);
+        if (containsAny) {
+            return StringEscapeUtils.escapeJson(message);
+        } else {
+            return message;
+        }
+    }
 
     private static String buildJson(String path, Issue issue, String lang) {
         String docUrl = generateDocUrl(issue.getRuleKey());
-        String desc = StringEscapeUtils.escapeJson(issue.getMessage());
+        String desc = safeMessage(issue.getMessage());
         BufferedInputFile inputFile = (BufferedInputFile)issue.getInputFile();
         int begin = issue.getStartLine() == null ? 1 : issue.getStartLine();
         CodeBlock codeBlock = new CodeBlock(inputFile, begin);

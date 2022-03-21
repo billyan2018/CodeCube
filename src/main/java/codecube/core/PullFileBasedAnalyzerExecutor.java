@@ -77,12 +77,12 @@ public class PullFileBasedAnalyzerExecutor implements AnalyzerExecutor {
     AnalysisErrorsListener analysisErrorsListener = (message, location) -> errors.add(new AnalysisErrorImpl(message, location));
 
     engine.analyze(
-      config,
-      issueListener,
-      highlightingListener,
-      symbolRefsListener,
-      null,
-      logOutput);
+            config,
+            issueListener,
+            highlightingListener,
+            symbolRefsListener,
+            analysisErrorsListener,
+            logOutput);
 
   }
 

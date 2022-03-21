@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.sonar.api.batch.fs.TextRange;
 import org.sonar.api.batch.sensor.error.AnalysisError;
 import org.sonar.api.batch.sensor.highlighting.TypeOfText;
+import org.sonar.api.batch.sensor.highlighting.internal.SyntaxHighlightingRule;
 import org.sonarsource.sonarlint.core.StandaloneSonarLintEngineImpl;
 import org.sonarsource.sonarlint.core.client.api.common.LogOutput;
 import org.sonarsource.sonarlint.core.client.api.common.analysis.*;
@@ -43,18 +44,11 @@ public class FileBasedAnalyzerExecutor implements AnalyzerExecutor {
     LogOutput logOutput = (formattedMessage, level) -> {
     };
 
-    List<Highlighting> highlightings = new ArrayList<>();
-    HighlightingListener highlightingListener = highlighting -> highlighting.forEach(hl -> highlightings.add(new Highlighting() {
-      @Override
-      public TypeOfText type() {
-        return hl.getTextType();
-      }
 
-      @Override
-      public TextRange textRange() {
-        return hl.range();
+    HighlightingListener highlightingListener = new HighlightingListener() {
+      public void handle(List<SyntaxHighlightingRule> highlighting) {
       }
-    }));
+    };
 
     Map<TextRange, Set<TextRange>> symbolRefs = new HashMap<>();
     SymbolRefsListener symbolRefsListener = symbolRefs::putAll;

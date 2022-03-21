@@ -11,8 +11,6 @@ public class CodeBlock {
     private static final int CONTEXT_LINES = 2;
     private static final int MAX_LINES = 10;
 
-    private final BufferedInputFile inputFile;
-
     @Getter
     private final int highlight;
     @Getter
@@ -26,7 +24,6 @@ public class CodeBlock {
 
     public CodeBlock(BufferedInputFile inputFile,
                      int begin) {
-        this.inputFile = inputFile;
         this.highlight = begin;
 
         this.start = Math.max(begin - CONTEXT_LINES, 1);
