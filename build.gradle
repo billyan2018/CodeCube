@@ -72,6 +72,11 @@ publishing {
             }
         }
     }
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
 }
 
 /*jacocoTestReport {
@@ -81,4 +86,3 @@ publishing {
                 "on")
     }
 }*/
-
