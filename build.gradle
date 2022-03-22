@@ -65,7 +65,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = "https://github.com/billyan2018/CodeCube"
+            url = "https://maven.pkg.github.com/billyan2018/CodeCube"
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
