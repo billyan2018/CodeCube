@@ -73,7 +73,7 @@ publishing {
         }
     }
     publications {
-        maven(MavenPublication) {
+        gpr(MavenPublication) {
             from components.java
         }
     }
