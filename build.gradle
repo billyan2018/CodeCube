@@ -73,6 +73,9 @@ publishing {
         }
     }
     publications {
+        groupId 'codecude'
+        artifactId 'codecude'
+        version '1.0'
         gpr(MavenPublication) {
             from components.java
         }
