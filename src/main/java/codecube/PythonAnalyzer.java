@@ -10,16 +10,15 @@ import java.nio.file.Paths;
 @Slf4j
 class PythonAnalyzer extends BaseAnalyzer {
 
-    private static final String  PLUG_IN_FILE= "sonar-python-plugin-1.8.0.1496.jar";
+    private static final String  PLUGIN_FILE= "sonar-python-plugin-1.8.0.1496.jar";
     @Override
     String language() {
         return "python";
     }
 
     @Override
-    Path findPluginFile() {
-        ensurePlugin(PLUG_IN_FILE);
-        return Paths.get(new File(PLUG_IN_FILE).getAbsolutePath());
+    String pluginFilePath() {
+        return PLUGIN_FILE;
     }
 
 }

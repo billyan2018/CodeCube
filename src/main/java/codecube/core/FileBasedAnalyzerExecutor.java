@@ -35,7 +35,7 @@ public class FileBasedAnalyzerExecutor implements AnalyzerExecutor {
             .stream()
             .map(FileBasedAnalyzerExecutor:: buildInputFile)
             .collect(Collectors.toList());
-    Map<String, String> extraProperties = Collections.singletonMap("sonar.java.binaries", "**/classes");
+    Map<String, String> extraProperties = Collections.emptyMap();//Collections.singletonMap("sonar.java.binaries", "**/classes");
     StandaloneAnalysisConfiguration config = new StandaloneAnalysisConfiguration(
             baseDir.toPath(),
             inputFiles,
