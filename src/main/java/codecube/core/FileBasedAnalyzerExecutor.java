@@ -1,9 +1,6 @@
 package codecube.core;
 
 import lombok.RequiredArgsConstructor;
-import org.sonar.api.batch.fs.TextPointer;
-import org.sonar.api.batch.fs.TextRange;
-import org.sonar.api.batch.sensor.highlighting.internal.SyntaxHighlightingRule;
 import org.sonarsource.sonarlint.core.StandaloneSonarLintEngineImpl;
 import org.sonarsource.sonarlint.core.client.api.common.LogOutput;
 import org.sonarsource.sonarlint.core.client.api.common.analysis.*;
@@ -11,7 +8,6 @@ import org.sonarsource.sonarlint.core.client.api.standalone.StandaloneAnalysisCo
 import org.sonarsource.sonarlint.core.client.api.standalone.StandaloneGlobalConfiguration;
 import org.sonarsource.sonarlint.core.client.api.standalone.StandaloneSonarLintEngine;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -46,24 +42,17 @@ public class FileBasedAnalyzerExecutor implements AnalyzerExecutor {
     };
 
 
-    HighlightingListener highlightingListener = new HighlightingListener() {
-      public void handle(List<SyntaxHighlightingRule> highlighting) {
-      }
+    HighlightingListener highlightingListener = highlighting -> {
+      // ignore
     };
 
 
-    SymbolRefsListener symbolRefsListener = new SymbolRefsListener() {
-      @Override
-      public void handle(Map<TextRange, Set<TextRange>> referencesBySymbol) {
-        // ignore
-      }
+    SymbolRefsListener symbolRefsListener = referencesBySymbol -> {
+      // ignore
     };
 
-    AnalysisErrorsListener analysisErrorsListener = new AnalysisErrorsListener() {
-      @Override
-      public void handle(@Nullable String message, @Nullable TextPointer location) {
-        // ignore
-      }
+    AnalysisErrorsListener analysisErrorsListener = (message, location) -> {
+      // ignore
     };
 
     engine.analyze(
