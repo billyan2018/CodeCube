@@ -1,9 +1,8 @@
 package codecube.core;
 
 import lombok.RequiredArgsConstructor;
+import org.sonar.api.batch.fs.TextPointer;
 import org.sonar.api.batch.fs.TextRange;
-import org.sonar.api.batch.sensor.error.AnalysisError;
-import org.sonar.api.batch.sensor.highlighting.TypeOfText;
 import org.sonar.api.batch.sensor.highlighting.internal.SyntaxHighlightingRule;
 import org.sonarsource.sonarlint.core.StandaloneSonarLintEngineImpl;
 import org.sonarsource.sonarlint.core.client.api.common.LogOutput;
@@ -12,6 +11,7 @@ import org.sonarsource.sonarlint.core.client.api.standalone.StandaloneAnalysisCo
 import org.sonarsource.sonarlint.core.client.api.standalone.StandaloneGlobalConfiguration;
 import org.sonarsource.sonarlint.core.client.api.standalone.StandaloneSonarLintEngine;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,7 +35,8 @@ public class FileBasedAnalyzerExecutor implements AnalyzerExecutor {
             .stream()
             .map(FileBasedAnalyzerExecutor:: buildInputFile)
             .collect(Collectors.toList());
-    Map<String, String> extraProperties = Collections.emptyMap();//Collections.singletonMap("sonar.java.binaries", "**/classes");
+    Map<String, String> extraProperties =
+            Collections.singletonMap("sonar.java.binaries",".");
     StandaloneAnalysisConfiguration config = new StandaloneAnalysisConfiguration(
             baseDir.toPath(),
             inputFiles,
@@ -50,11 +51,20 @@ public class FileBasedAnalyzerExecutor implements AnalyzerExecutor {
       }
     };
 
-    Map<TextRange, Set<TextRange>> symbolRefs = new HashMap<>();
-    SymbolRefsListener symbolRefsListener = symbolRefs::putAll;
 
-    List<AnalysisError> errors = new ArrayList<>();
-    AnalysisErrorsListener analysisErrorsListener = (message, location) -> errors.add(new AnalysisErrorImpl(message, location));
+    SymbolRefsListener symbolRefsListener = new SymbolRefsListener() {
+      @Override
+      public void handle(Map<TextRange, Set<TextRange>> referencesBySymbol) {
+        // ignore
+      }
+    };
+
+    AnalysisErrorsListener analysisErrorsListener = new AnalysisErrorsListener() {
+      @Override
+      public void handle(@Nullable String message, @Nullable TextPointer location) {
+        // ignore
+      }
+    };
 
     engine.analyze(
             config,
